@@ -62,7 +62,7 @@ bash scripts/package-release.sh
 
 **Compatibility:** consult the sourced guidance and record an actual test. A successful launch does not establish LAN compatibility. The page distinguishes reaching a menu, gameplay, joining a Windows host and completing a LAN session. Historical results are flagged when the package or saved runtime configuration changes.
 
-The [Warcraft III setup notes](docs/WARCRAFT-III.md) cover the tested Frozen Throne build, OpenGL fix for black terrain, full-screen setup and Bonjour discovery. FlatOut 2's in-app guide includes the verified resolution setup. Among Us and the older synced Rocket League build have user-confirmed LAN play with the Windows group using CrossOver 26.3.0. Quake III also joined a Windows 1.32 LAN server using native ARM64 ioquake3; see the [native setup notes](docs/QUAKE-III.md). See the [observed results](docs/COMPATIBILITY.md#observed-game-results) for the tested builds, settings and limits.
+The [Warcraft III setup notes](docs/WARCRAFT-III.md) cover the tested Frozen Throne build, OpenGL fix for black terrain, full-screen setup and Bonjour discovery. FlatOut 2's in-app guide includes the verified resolution setup. Among Us and the older synced Rocket League build have user-confirmed LAN play with the Windows group using CrossOver 26.3.0. Quake III also joined a Windows 1.32 LAN server using native ARM64 ioquake3; see the [native setup notes](docs/QUAKE-III.md). Left 4 Dead 2 now has an observed local gameplay test after an [overlay fix](docs/LEFT-4-DEAD-2.md); Windows joining remains untested. See the [observed results](docs/COMPATIBILITY.md#observed-game-results) for the tested builds, settings and limits.
 
 ![Compatibility guidance](docs/compatibility-preview.jpg)
 

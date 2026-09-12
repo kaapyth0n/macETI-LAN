@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Record Left 4 Dead 2's supplied-overlay startup fix, local gameplay test, full-screen settings and observed LAN peer discovery.
+
 - Document native ARM64 Quake III setup, verified local rendering/movement and joining a Windows 1.32 LAN server in full-screen mode.
 - Exclude Quake game-data archives, keys, configuration and demos from source publication.
 

@@ -1,8 +1,9 @@
 {
   "schemaVersion": 1,
-  "contentRevision": "2026-09-12.7",
+  "contentRevision": "2026-09-12.8",
   "reviewedAt": "2026-09-12",
   "sources": [
+    {"id":"l4d2-overlay","title":"Supplied overlay component: disable-overlay setting","url":"https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/blob/master/Readme_release.txt","context":"Original project README; the setting was also found in the supplied DLL and tested locally."},
     {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
     {"id":"cx26","title":"CrossOver 26: advanced settings","url":"https://support.codeweavers.com/en_US/advanced-settings-in-crossover-mac-26","context":"Official Mac documentation · CrossOver 26 and later · updated February 2026"},
     {"id":"crosstie","title":"CrossTie installation profiles","url":"https://support.codeweavers.com/en_US/an-intermediate-guide-on-what-the-crosstie-editor-options-mean","context":"Official recipe documentation · installation and dependency mechanisms, not an M2 game test"},
@@ -47,12 +48,54 @@
       "sourceIDs":["amongus","amongus-auth","innersloth","rarlab"]
     },
     {
-      "gameID":"l4d2","revision":1,"reviewedPackageRevision":"20201021","route":"crossOver",
-      "summary":"This profile covers Left 4 Dead 2. Start with a dedicated CrossOver trial using the ETI Windows build; gameplay and co-op remain untested here.",
-      "setup":[{"title":"Keep this edition separate from Left 4 Dead 1","detail":"Check the installed game's version and content against the Windows host. Select the prepared local executable in Runtime and record any package-specific launch arguments.","sourceIDs":[]}],
-      "troubleshooting":[{"title":"Old performance tips need revalidation","detail":"The linked tips are mostly from 2009–2010 and include Linux audio fixes. Do not treat old memory, GLSL or launch-argument tweaks as current M2 defaults. Start from the current CrossOver baseline.","sourceIDs":["l4d2","cx26"]}],
-      "lanChecklist":["Join a Windows-hosted local co-op campaign with matching content.","Test input, sound, a level transition and reconnecting.","Repeat without WAN access after provisioning. Validate Mac hosting in a separate trial."],
-      "sourceIDs":["l4d2"]
+      "gameID": "l4d2",
+      "revision": 2,
+      "reviewedPackageRevision": "20201021",
+      "route": "crossOver",
+      "summary": "ETI package 20201021 (game 2.2.0.3, build 8011) was tested on M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. Disabling the package overlay fixed a startup crash. A local Dead Center hotel map rendered, keyboard movement and firing worked, and the full-screen menu rendered at 1280×800. Six LAN peers appeared in the menu; joining a Windows match remains untested.",
+      "setup": [
+        {
+          "title": "Prepare a dedicated bottle and writable installation",
+          "detail": "Create a Windows 10 64-bit bottle from Runtime. Package installation is manual for this revision: the inspected l4d2.eti is 9,987,347,585 bytes and expands to 18,250,177,979 bytes. Extract it into a separate writable folder such as C:\\Left4Dead2. The trial used Graphics Auto and High Resolution Mode off, without extra prerequisite installers.",
+          "sourceIDs": []
+        },
+        {
+          "title": "Disable the supplied optional overlay",
+          "detail": "The original package exited before a window appeared, with an exception inside its steam_api.dll. An empty bin/steam_settings/disable_overlay.txt in the extracted installation fixed startup. Keep the DLLs unchanged. This is the supplied overlay component's documented setting, applied only to the tested local copy.",
+          "sourceIDs": [
+            "l4d2-overlay"
+          ]
+        },
+        {
+          "title": "Save launch and display settings",
+          "detail": "Choose left4dead2.exe, its containing folder as the working directory, and -novid as the only saved argument. In the game, Options → Video → Display Mode → Full screen worked at 1280×800, widescreen 16:10. Temporary -windowed, -w, -h and -condebug test arguments were removed from the saved launcher configuration.",
+          "sourceIDs": []
+        }
+      ],
+      "troubleshooting": [
+        {
+          "title": "Separate discovery from joining",
+          "detail": "The menu showed six peers after the overlay fix. That establishes discovery only; a matching Windows co-op or versus session, level transitions and reconnecting still need testing. The tested package displayed an insecure/VAC warning; public VAC-secured play was not tested.",
+          "sourceIDs": []
+        },
+        {
+          "title": "Old performance tips need revalidation",
+          "detail": "The linked tips are mostly from 2009–2010 and include Linux audio fixes. Do not treat old memory, GLSL or launch-argument tweaks as current M2 defaults. Start from the current CrossOver baseline.",
+          "sourceIDs": [
+            "l4d2",
+            "cx26"
+          ]
+        }
+      ],
+      "lanChecklist": [
+        "Join a Windows-hosted local co-op campaign with matching content.",
+        "Test input, sound, a level transition and reconnecting.",
+        "Repeat without WAN access after provisioning. Validate Mac hosting in a separate trial."
+      ],
+      "sourceIDs": [
+        "l4d2",
+        "l4d2-overlay"
+      ]
     },
     {
       "gameID":"flat2","revision":2,"reviewedPackageRevision":"20160922","route":"crossOver",
