@@ -36,7 +36,7 @@ public enum GameLauncher {
             guard let crossOver else { throw ETIError("CrossOver is not installed. Install it and create a bottle, then configure this game.") }
             guard !config.bottle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
                   !config.bottle.contains("/"), !config.bottle.contains("\0") else {
-                throw ETIError("Enter an existing CrossOver bottle name in Runtime settings.")
+                throw ETIError("Create a bottle in Runtime settings or enter an existing bottle name.")
             }
             guard executable.pathExtension.lowercased() == "exe" else { throw ETIError("Choose a Windows .exe for CrossOver.") }
             let wine = crossOver.appendingPathComponent("Contents/SharedSupport/CrossOver/bin/wine")

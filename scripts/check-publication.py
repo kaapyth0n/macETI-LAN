@@ -9,7 +9,7 @@ import re
 import subprocess
 import sys
 
-DENIED_PARTS = {'.build', '.swiftpm', '.local', 'dist', '.sync', 'Artwork', 'Runtimes', '__pycache__', 'xcuserdata'}
+DENIED_PARTS = {'.build', '.swiftpm', '.local', 'dist', '.sync', 'Artwork', 'Runtimes', 'Setup', '__pycache__', 'xcuserdata'}
 DENIED_NAMES = {'library.json', 'compatibility-tests.json', 'catalog-receipt.json', 'bootstrap-receipt.json', '.DS_Store'}
 DENIED_SUFFIXES = {'.db', '.key', '.w3k', '.w3g', '.w3z', '.w3x', '.w3m', '.w3n', '.rsls', '.exe', '.dll', '.zip', '.dmg', '.tar', '.eti', '.pem', '.p12', '.log', '.pyc', '.icns'}
 PATTERNS = {

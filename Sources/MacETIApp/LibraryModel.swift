@@ -23,6 +23,9 @@ final class LibraryModel: ObservableObject {
     @Published var testLogError: String?
     private var processes: [String: Process] = [:]
     @Published var launchingIDs: Set<String> = []
+    @Published var setupGameID: String?
+    @Published var setupMessages: [String: String] = [:]
+    private var setupCancellation: SetupCancellation?
 
     init() {
         status = ResilioDesktop.status(paths: store.paths)
@@ -73,17 +76,53 @@ final class LibraryModel: ObservableObject {
     }
 
     func saveRuntime(_ config: RuntimeConfiguration, for game: Game) throws {
+        guard setupGameID != game.id else { throw ETIError("Wait for setup to finish before changing this runtime.") }
         userLibrary = try preferences.update(game.id) { $0.runtime = config }
     }
 
+    func setUp(_ game: Game, mode: CrossOverSetupMode) {
+        guard setupGameID == nil, preferencesAvailable, !launchingIDs.contains(game.id) else { return }
+        let cancellation = SetupCancellation()
+        setupCancellation = cancellation
+        setupGameID = game.id
+        setupMessages[game.id] = "Preparing setup…"
+        let worker = CrossOverSetup(paths: store.paths, cancellation: cancellation)
+        let expected = preference(game).runtime
+        Task {
+            do {
+                _ = try await Task.detached {
+                    try worker.perform(gameID: game.id, revision: game.packageRevision, mode: mode, expectedRuntime: expected) { [weak self] message in
+                        Task { @MainActor [weak self] in
+                            if self?.setupGameID == game.id { self?.setupMessages[game.id] = message }
+                        }
+                    }
+                }.value
+                setupMessages[game.id] = mode == .installPackage ? "Ready to launch." : "Bottle ready. Select the installed executable in Runtime; see Compatibility for extra setup."
+            } catch is CancellationError {
+                setupMessages[game.id] = "Setup cancelled. Extracted staging files were removed. Any new bottle was kept for the next attempt."
+            } catch {
+                setupMessages[game.id] = error.localizedDescription
+            }
+            do { userLibrary = try preferences.load() }
+            catch { message = error.localizedDescription; preferencesAvailable = false }
+            setupCancellation = nil
+            setupGameID = nil
+        }
+    }
+
+    func cancelSetup() {
+        setupCancellation?.cancel()
+        if let setupGameID { setupMessages[setupGameID] = "Cancelling… Bottle creation, if underway, will finish first." }
+    }
+
     func launch(_ game: Game) {
-        guard !launchingIDs.contains(game.id) else { return }
+        guard !launchingIDs.contains(game.id), setupGameID != game.id else { return }
         do {
             let command = try GameLauncher.command(for: preference(game).runtime)
             let process = try GameLauncher.launch(command)
             processes[game.id] = process
             launchingIDs.insert(game.id)
-            message = "Launch request sent for \(game.title). Compatibility has not been verified."
+            message = "Launch request sent for \(game.title). See Compatibility for the recorded test results."
             process.terminationHandler = { [weak self] process in
                 let code = process.terminationStatus
                 Task { @MainActor [weak self] in

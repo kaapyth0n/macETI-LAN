@@ -1,6 +1,6 @@
 # Compatibility guidance — 12 September 2026
 
-The launcher provides sourced guidance on every game page, versioned profiles for six games, and private recording of manual test results. The source includes manual setup notes from actual FlatOut 2, Warcraft III and Among Us trials. It does not install prerequisites, change bottle settings or execute CrossTies. Changes under Unreleased in the changelog require a source build until a new binary is published.
+The launcher provides sourced guidance on every game page, versioned profiles for seven games, and private recording of manual test results. The source includes manual setup notes from actual FlatOut 2, Warcraft III, Among Us and Rocket League trials. Version 0.4.0 adds bottle creation for Windows games and automatic extraction/launch setup for the exact Among Us and Rocket League packages; see [automatic setup](SETUP.md). It does not install extra prerequisites or execute CrossTies.
 
 ## User flow
 
@@ -12,7 +12,7 @@ The latest recorded result displays its environment and date. If the catalog pac
 
 ## Profile content
 
-`Sources/MacETICore/Resources/compatibility.json` has schema version 1 and content revision `2026-09-12.5`. It contains shared setup notes, source metadata and six profiles:
+`Sources/MacETICore/Resources/compatibility.json` has schema version 1 and content revision `2026-09-12.6`. It contains shared setup notes, source metadata and seven profiles:
 
 | ETI ID | Route | Catalog package at research time |
 | --- | --- | --- |
@@ -22,8 +22,9 @@ The latest recorded result displays its environment and date. If the catalog pac
 | `cod2` | CrossOver, experimental | `20160922` |
 | `quake3` | Native ioquake3 experiment | `20160922` |
 | `wc3` | CrossOver, built-in OpenGL renderer | `20260308` |
+| `rocket` | CrossOver, supplied package launcher | `20260410` |
 
-These package revisions came from the live catalog. FlatOut 2, Warcraft III and Among Us packages were subsequently synced, inspected and tested as described below. The other entries remain research profiles. The page warns when a catalog revision changes. A curated route never overrides the user's saved runtime. Other games get shared guidance for their chosen runtime and an explicit unresearched status.
+These package revisions came from the live catalog. FlatOut 2, Warcraft III, Among Us and Rocket League packages were subsequently synced, inspected and tested as described below. The other entries remain research profiles. The page warns when a catalog revision changes. A curated route never overrides the user's saved runtime. Other games get shared guidance for their chosen runtime and an explicit unresearched status.
 
 The sources include [CrossOver 26 advanced settings](https://support.codeweavers.com/en_US/advanced-settings-in-crossover-mac-26), [CrossTie profile documentation](https://support.codeweavers.com/en_US/an-intermediate-guide-on-what-the-crosstie-editor-options-mean), CodeWeavers game-specific tips, [Innersloth](https://www.innersloth.com/games/among-us/) and [ioquake3](https://ioquake3.org/get-it/). Game-specific URLs and historical dates are retained in the JSON. Dynamic ratings are linked rather than presented as continuously current data.
 
@@ -38,6 +39,7 @@ Trials on 12 September 2026 used Apple M2 Pro, macOS 15.7.9 and CrossOver 26.3.0
 | FlatOut 2 v1.2, package `20160922` | User confirmed gameplay. Agent verified the full-screen profile menu at 1512×945, 32-bit colour, 16:10 after configuring with temporary `-setup` and removing the forced Wine virtual desktop. Microsoft's official June 2010 DirectX runtime was installed in this bottle. | Windows LAN race/derby, track change and reconnect. |
 | Warcraft III 1.30.4.11274, package `20260308` | User confirmed joining a Windows LAN match, but its 3D world was black. After adding `-opengl`, the agent verified terrain, models, portrait and movement in a short local run of the same custom map, both windowed and using macOS full-screen. The LAN browser showed waiting lobbies after the fix. | Joining and completing a LAN round with the final OpenGL configuration, map changes, reconnect, Mac hosting and operation without WAN. |
 | Among Us v2024.11.26s (build 4936), package `20250308` | **User confirmed working LAN play with the Windows group.** The agent separately verified Skeld practice rendering and keyboard movement. Launched without extra dependencies or arguments; Local was accessible after dismissing `SteamworksAuthFail`. | Reconnecting, Mac hosting and operation without WAN. Tasks, discussion, voting and completed-round coverage were not individually recorded in the user's report. |
+| Rocket League build 180407.56364.190397, package `20260410` | **User confirmed working LAN play.** The agent observed the rendered main menu and a live LAN arena/team selection. The 32-bit Direct3D 9 build ran through the supplied `SmartSteamLoader.exe`, with the game root as working directory, no arguments and no extra dependency installers. | A completed match, arena changes, reconnecting, Mac hosting and operation without WAN. Current store online play is a separate experiment. |
 | Left 4 Dead 2, Call of Duty 2, Quake III | Research guidance only at this revision. | Package-specific gameplay and Windows interoperability. |
 
 The [Warcraft III runbook](WARCRAFT-III.md) records extraction, supplied setup helpers, expansion selection, resolution and Bonjour details. Private logs, screenshots with player identities, license material and test history stay outside the repository. No complete LAN round is certified by these observations.
@@ -56,6 +58,10 @@ After the initial empty-browser check, the user confirmed that Among Us worked w
 - Browsing guidance creates no test log. Saving an observation does not modify `library.json`, create individual game folders or start a sync.
 - `maceti compatibility GAME_ID [--json]` uses the same guide resolver and requires an existing catalog game. It does not expose sync keys or change settings.
 
+## Setup validation
+
+The setup tests cover creation without a sync package, installation and idempotence, unsupported/incomplete package rejection, cancellation cleanup, preservation of partial bottles, concurrent preference edits and recovery, archive traversal/link/duplicate/size rejection, and exact revision/runtime availability. Real automated setup trials for both Among Us and Rocket League passed on the M2 Pro with CrossOver 26.3.0: the pinned tool was downloaded and verified, real archives were extracted with successful CRC checks, fresh bottles were created and their saved launch commands validated. These trials used isolated preferences; the four existing game configurations remained byte-for-byte unchanged. This validates provisioning, not an additional completed LAN match.
+
 ## Initial launcher validation
 
 - `swift test`: 26 tests pass, including 8 new compatibility tests for curated/fallback routes, resource loading, invalid profiles, private history persistence, invalid-log preservation, historical-result matching and LAN outcome validation.
@@ -65,4 +71,4 @@ After the initial empty-browser check, the user confirmed that Among Us worked w
 - Native visual verification completed after unlocking and restarting the rebuilt app. Checked Among Us's game-specific guidance, all expandable troubleshooting/LAN/source sections, Factorio's general fallback, the Runtime shortcut and Quake III's native ioquake3 guidance. Layouts and scrolling render correctly in the native sheets. See the [compatibility page preview](compatibility-preview.jpg).
 - Inspected the test-recording form, including automatic M2 Pro/macOS environment details and disabled Save for an empty result. A synthetic menu-only observation combined with a completed LAN session was rejected with an actionable validation error. Cancelled the form and confirmed no live test log was created. Successful persistence remains covered by the isolated core tests; no real game result was entered during UI verification.
 
-Those initial UI checks preceded the real game trials above. Automatic setup and rollback remain future work; recording a local result alone never promotes a profile to executable automation.
+Those initial UI checks preceded the real game trials above. The separately implemented setup worker now offers reviewed, package-specific recipes. Recording a local result alone never promotes a profile to executable automation. See [setup behavior and recovery](SETUP.md).

@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 — Automatic CrossOver setup
+
+- Create and save a dedicated Windows 10 64-bit bottle from any Windows game page.
+- Set up the tested Among Us and Rocket League packages automatically: validate the synced archive, extract into a fresh bottle and save the executable, working folder and arguments.
+- Preserve existing installations, provide progress/cancellation and keep private recovery receipts and logs.
+- Add Rocket League’s tested older-build guidance and the `maceti setup` command.
 
 - Fix CrossOver launches when the executable and working directory use macOS paths.
 - Document the verified FlatOut 2 resolution setup and classic Warcraft III Frozen Throne setup, including OpenGL rendering, edition selection and Bonjour discovery.
@@ -22,4 +27,4 @@
 - Original app icon, packaged CLI, setup helpers and release checksums.
 - Public build/contribution documentation and macOS CI.
 
-Game installation and Mac–Windows LAN compatibility remain experimental. See the compatibility notes for individual observations; automatic setup recipes are not implemented.
+Game installation and Mac–Windows LAN compatibility remain experimental. See the compatibility notes for individual observations; automatic package recipes currently cover Among Us and Rocket League only.

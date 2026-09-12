@@ -38,7 +38,7 @@ public struct CompatibilityGuide: Codable, Sendable {
     public let troubleshooting: [CompatibilityNote]
     public let lanChecklist: [String]
     public let sources: [CompatibilitySource]
-    // No action executor exists yet. Research and local reports never enable one.
+    // Derived from reviewed Swift recipes for the exact package; prose never enables actions.
     public let automaticSetupAvailable: Bool
 }
 
@@ -91,7 +91,7 @@ public struct CompatibilityCatalog: Codable, Sendable {
         return catalog
     }
 
-    public func guide(for gameID: String, runtime: RuntimeKind) -> CompatibilityGuide {
+    public func guide(for gameID: String, runtime: RuntimeKind, packageRevision: String? = nil) -> CompatibilityGuide {
         let profile = profiles.first { $0.gameID == gameID }
         let route = profile?.route ?? runtime
         let setup = (route == .crossOver ? crossOverSetup : nativeSetup) + (profile?.setup ?? [])
@@ -100,6 +100,9 @@ public struct CompatibilityCatalog: Codable, Sendable {
         return CompatibilityGuide(gameID: gameID, contentRevision: contentRevision, reviewedAt: reviewedAt,
                                   profile: profile, route: route, setup: setup, troubleshooting: issues,
                                   lanChecklist: profile?.lanChecklist ?? lanChecklist,
-                                  sources: sources.filter { refs.contains($0.id) }, automaticSetupAvailable: false)
+                                  sources: sources.filter { refs.contains($0.id) },
+                                  automaticSetupAvailable: runtime == .crossOver && packageRevision.map {
+                                      CrossOverRecipe.recipe(for: gameID, revision: $0) != nil
+                                  } == true)
     }
 }

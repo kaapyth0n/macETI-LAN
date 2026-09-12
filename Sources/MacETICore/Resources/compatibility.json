@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentRevision": "2026-09-12.5",
+  "contentRevision": "2026-09-12.6",
   "reviewedAt": "2026-09-12",
   "sources": [
     {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
@@ -39,9 +39,9 @@
   ],
   "profiles": [
     {
-      "gameID":"amongus","revision":3,"reviewedPackageRevision":"20250308","route":"crossOver",
+      "gameID":"amongus","revision":4,"reviewedPackageRevision":"20250308","route":"crossOver",
       "summary":"User-confirmed working LAN play with the Windows group on M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. ETI package 20250308 contains v2024.11.26s (build 4936). The agent separately verified Skeld practice rendering and keyboard movement. The successful LAN result is user-reported; reconnecting, Mac hosting and operation without WAN remain untested.",
-      "setup":[{"title":"Match the participants' game versions","detail":"Use the same Windows package as the other ETI players and confirm the version shown in the game. The tested package reports v2024.11.26s, build 4936; a current store release may differ.","sourceIDs":["amongus","innersloth"]},{"title":"Start with the tested clean bottle","detail":"The trial used a dedicated Windows 10 64-bit bottle, Graphics Auto, no additional dependencies and no launch arguments. Extract the synced amongus.eti into a writable local folder, select Among Us.exe and its containing folder in Runtime. UnRAR 7.23 extracted the tested package with CRC validation. The game reported Direct3D 11 and rendered The Skeld without a Warcraft-style OpenGL override.","sourceIDs":["rarlab"]}],
+      "setup":[{"title":"Match the participants' game versions","detail":"Use the same Windows package as the other ETI players and confirm the version shown in the game. The tested package reports v2024.11.26s, build 4936; a current store release may differ.","sourceIDs":["amongus","innersloth"]},{"title":"Start with the tested clean bottle","detail":"Use Set up game in Overview or Runtime for package 20250308. It creates a dedicated Windows 10 64-bit bottle, extracts the synced archive and saves Among Us.exe with its containing folder as the working directory. The tested baseline uses Graphics Auto, no extra dependencies and no launch arguments. UnRAR 7.23 extracted the tested package with CRC validation. The game reported Direct3D 11 and rendered The Skeld correctly. Existing configured installations are preserved.","sourceIDs":["rarlab"]}],
       "troubleshooting":[{"title":"Steam account error versus Local play","detail":"This direct launch showed SteamworksAuthFail. After closing the message, Play → Local and Play → Practice remained usable in the tested build, and the user later confirmed LAN play worked. That does not establish online account functionality. Innersloth recommends launching through Steam for this sign-in error; do not treat it as a graphics failure or change DLLs to fix account authentication.","sourceIDs":["amongus-auth"]},{"title":"Use a waiting lobby for discovery checks","detail":"The Local browser was initially empty when the other players had already started their round. The user subsequently confirmed successful LAN play with the Windows group. Repeat discovery checks with a known waiting lobby and matching builds. Tasks, discussion, voting and completed-round coverage were not individually recorded in that confirmation; record those details and reconnecting in future reports.","sourceIDs":[]}],
       "lanChecklist":["Join a Windows-hosted Local lobby with the same game version.","Complete a round, including discussion and voting, then rejoin.","Repeat with WAN disconnected after provisioning; record account and chat requirements."],
       "sourceIDs":["amongus","amongus-auth","innersloth","rarlab"]
@@ -85,6 +85,43 @@
       "troubleshooting":[{"title":"Keep native and CrossOver trials separate","detail":"These setup notes target ioquake3. If you switch Runtime to CrossOver, the saved choice is respected, but the native guide does not become a Windows recipe.","sourceIDs":[]}],
       "lanChecklist":["Load the intended game data in the Apple Silicon engine.","Discover or directly connect to the Windows ETI host; complete a match.","Change maps, reconnect and test required mods. Repeat without WAN access after provisioning."],
       "sourceIDs":["ioq3","ioq3-guide"]
+    },
+    {
+      "gameID": "rocket",
+      "revision": 1,
+      "reviewedPackageRevision": "20260410",
+      "route": "crossOver",
+      "summary": "User confirmed Rocket League works with the Windows LAN group on M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. The agent observed the rendered main menu and a live LAN arena/team selection. Package 20260410 contains the older 32-bit build 180407.56364.190397, not the current store release. A completed match, reconnecting and Mac hosting were not independently verified.",
+      "setup": [
+        {
+          "title": "Set up the synced package",
+          "detail": "Use Set up game in Overview or Runtime. The recipe creates a dedicated Windows 10 64-bit bottle, extracts rocket.eti into C:\\RocketLeague and saves SmartSteamLoader.exe with that folder as its working directory and no arguments. This is the entry point used by the supplied Windows launcher. The trial needed no additional dependency installers or graphics overrides.",
+          "sourceIDs": []
+        },
+        {
+          "title": "Match this older build with the Windows players",
+          "detail": "The inspected game log reports build 180407.56364.190397 and the Direct3D 9 renderer. The catalog date is the package revision, not the game release date. Current Rocket League store requirements and online features may differ. Use the same package and compare the actual builds for LAN.",
+          "sourceIDs": []
+        }
+      ],
+      "troubleshooting": [
+        {
+          "title": "Start from the tested graphics defaults",
+          "detail": "The arena rendered with CrossOver Graphics Auto and High Resolution Mode off. No special resolution flag or registry override was applied. Record any display changes separately.",
+          "sourceIDs": [
+            "cx26"
+          ]
+        }
+      ],
+      "lanChecklist": [
+        "Join a waiting Windows LAN match with the same package and build.",
+        "Complete a match, change arena and reconnect; test Mac hosting separately.",
+        "Repeat without WAN after provisioning. Current store online play is a separate test."
+      ],
+      "sourceIDs": [
+        "cx26",
+        "rarlab"
+      ]
     }
   ]
 }

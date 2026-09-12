@@ -32,4 +32,5 @@ library.json
 compatibility-tests.json
 Artwork/
 Runtimes/
+Setup/
 xcuserdata/

@@ -19,7 +19,7 @@ final class CompatibilityTests: XCTestCase {
                           gameVersion: "test-build", gameplay: .menu, notes: "Synthetic test fixture")
     }
 
-    func testBundledProfilesCoverTargetsWithoutClaimingAutomaticSetup() throws {
+    func testBundledProfilesCoverTargetsAndRequirePackageForAutomation() throws {
         let catalog = try CompatibilityCatalog.bundled()
         // Curated guidance can grow without changing which games are initially saved.
         XCTAssertTrue(Set(GameProfile.selected.map(\.id)).isSubset(of: Set(catalog.profiles.map(\.gameID))))

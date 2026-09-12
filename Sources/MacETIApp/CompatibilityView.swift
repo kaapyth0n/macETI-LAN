@@ -12,7 +12,7 @@ struct CompatibilityView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             if let catalog = library.compatibilityCatalog {
-                let guide = catalog.guide(for: game.id, runtime: runtime.kind)
+                let guide = catalog.guide(for: game.id, runtime: runtime.kind, packageRevision: game.packageRevision)
                 header(guide)
                 results
                 HStack {
@@ -20,7 +20,7 @@ struct CompatibilityView: View {
                         .disabled(library.testLogError != nil || !library.preferencesAvailable)
                     Button("Runtime settings…", systemImage: "slider.horizontal.3", action: openRuntime)
                 }
-                Text("Automatic setup is not available yet. Follow the guidance below for a manual trial; test results are saved only on this Mac.")
+                Text(guide.automaticSetupAvailable ? "Set up this package from Overview or Runtime. Test results describe the recorded environment and are saved only on this Mac." : runtime.kind == .crossOver ? "CrossOver bottle creation is available in Runtime. Follow the guidance below for the remaining game-specific setup; test results are saved only on this Mac." : "Follow the native engine's setup guide, then choose its executable in Runtime. Test results are saved only on this Mac.")
                     .font(.callout).foregroundStyle(.secondary)
                 Divider()
                 notes("Suggested setup", guide.setup, sources: guide.sources)

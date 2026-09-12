@@ -59,8 +59,9 @@ struct GameDetailView: View {
                     .buttonStyle(.borderedProminent).disabled(game.readOnlyKey == nil)
                 Button("Runtime settings…", systemImage: "slider.horizontal.3") { section = "runtime" }
                 Button(library.launchingIDs.contains(game.id) ? "Launching…" : "Launch", systemImage: "play.fill") { library.launch(game) }
-                    .disabled(config.executablePath.isEmpty || !library.preferencesAvailable || library.launchingIDs.contains(game.id))
+                    .disabled(config.executablePath.isEmpty || !library.preferencesAvailable || library.launchingIDs.contains(game.id) || library.setupGameID == game.id)
             }
+            CrossOverSetupView(library: library, game: game)
             Button("Compatibility & setup", systemImage: "checkmark.seal") { section = "compatibility" }
             Text("CrossOver is the default for Windows packages. Choose Native / Mac app when using a port, and select its installed executable.")
                 .foregroundStyle(.secondary)
@@ -140,49 +141,57 @@ struct RuntimeSettingsView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("How should this game run?").font(.title3.bold())
-            Picker("Runtime", selection: $config.kind) {
-                ForEach(RuntimeKind.allCases, id: \.self) { Text($0.title).tag($0) }
-            }.pickerStyle(.segmented)
-            if config.kind == .crossOver {
-                TextField("Existing CrossOver bottle name", text: $config.bottle).textFieldStyle(.roundedBorder)
-                Text(GameLauncher.crossOverApp() == nil ? "CrossOver is not installed on this Mac. Install it and create a bottle before launching." : "CrossOver detected. Enter the existing bottle containing this game's dependencies.")
-                    .font(.caption).foregroundStyle(.secondary)
-            } else {
-                Text("Choose a native engine executable or a Mac .app. This overrides the default Windows runtime for this game only.")
-                    .font(.caption).foregroundStyle(.secondary)
-            }
-            HStack {
-                TextField(config.kind == .crossOver ? "Windows game executable (.exe)" : "Native executable or Mac app", text: $config.executablePath)
-                    .textFieldStyle(.roundedBorder)
-                Button("Choose…") { choose(directory: false) }
-            }
-            HStack {
-                TextField("Working folder (optional)", text: $config.workingDirectory).textFieldStyle(.roundedBorder)
-                Button("Choose…") { choose(directory: true) }
-            }
-            Text("Launch arguments · one argument per line").font(.caption).foregroundStyle(.secondary)
-            TextEditor(text: $argumentLines).font(.callout.monospaced()).frame(height: 65)
-                .border(.white.opacity(0.1))
-            Text("Use an installed copy for play. Keep extracted games, runtime settings and saves separate from the synced distribution package.")
-                .font(.caption).foregroundStyle(.secondary)
-            HStack {
-                Button("Save runtime") {
-                    do {
-                        config.arguments = argumentLines.split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
-                        try library.saveRuntime(config, for: game)
-                        feedback = "Runtime saved for \(game.title)."
-                    } catch { feedback = error.localizedDescription }
-                }.buttonStyle(.borderedProminent).disabled(!library.preferencesAvailable)
-                Button("Reset to default") {
-                    config = .defaultFor(game.id)
-                    argumentLines = ""
-                    feedback = "Default restored in this form. Save to apply."
+            CrossOverSetupView(library: library, game: game,
+                              formHasChanges: config != library.preference(game).runtime || argumentLines != config.arguments.joined(separator: "\n"))
+            Group {
+                Text("How should this game run?").font(.title3.bold())
+                Picker("Runtime", selection: $config.kind) {
+                    ForEach(RuntimeKind.allCases, id: \.self) { Text($0.title).tag($0) }
+                }.pickerStyle(.segmented)
+                if config.kind == .crossOver {
+                    TextField("CrossOver bottle name", text: $config.bottle).textFieldStyle(.roundedBorder)
+                    Text(GameLauncher.crossOverApp() == nil ? "Install and activate CrossOver to enable bottle creation." : "Setup fills this in automatically. You can also use an existing bottle.")
+                        .font(.caption).foregroundStyle(.secondary)
+                } else {
+                    Text("Choose a native engine executable or a Mac .app. This overrides the default Windows runtime for this game only.")
+                        .font(.caption).foregroundStyle(.secondary)
                 }
-                Spacer()
-                Text("See Compatibility for test results").font(.caption).foregroundStyle(.secondary)
-            }
-            Text(feedback).font(.callout).foregroundStyle(Theme.gold)
+                HStack {
+                    TextField(config.kind == .crossOver ? "Windows game executable (.exe)" : "Native executable or Mac app", text: $config.executablePath)
+                        .textFieldStyle(.roundedBorder)
+                    Button("Choose…") { choose(directory: false) }
+                }
+                HStack {
+                    TextField("Working folder (optional)", text: $config.workingDirectory).textFieldStyle(.roundedBorder)
+                    Button("Choose…") { choose(directory: true) }
+                }
+                Text("Launch arguments · one argument per line").font(.caption).foregroundStyle(.secondary)
+                TextEditor(text: $argumentLines).font(.callout.monospaced()).frame(height: 65)
+                    .border(.white.opacity(0.1))
+                Text("Use an installed copy for play. Keep extracted games, runtime settings and saves separate from the synced distribution package.")
+                    .font(.caption).foregroundStyle(.secondary)
+                HStack {
+                    Button("Save runtime") {
+                        do {
+                            config.arguments = argumentLines.split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
+                            try library.saveRuntime(config, for: game)
+                            feedback = "Runtime saved for \(game.title)."
+                        } catch { feedback = error.localizedDescription }
+                    }.buttonStyle(.borderedProminent).disabled(!library.preferencesAvailable)
+                    Button("Reset to default") {
+                        config = .defaultFor(game.id)
+                        argumentLines = ""
+                        feedback = "Default restored in this form. Save to apply."
+                    }
+                    Spacer()
+                    Text("See Compatibility for test results").font(.caption).foregroundStyle(.secondary)
+                }
+                Text(feedback).font(.callout).foregroundStyle(Theme.gold)
+            }.disabled(library.setupGameID == game.id)
+        }
+        .onChange(of: library.preference(game).runtime) { _, updated in
+            config = updated
+            argumentLines = updated.arguments.joined(separator: "\n")
         }
     }
 

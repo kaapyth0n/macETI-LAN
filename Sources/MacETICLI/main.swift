@@ -40,6 +40,7 @@ struct MacETICLI {
             unsave GAME_ID       Remove from My games (does not disconnect Resilio)
             runtime GAME_ID [crossover|native]  Show settings or change runtime choice
             launch GAME_ID [--dry-run]  Launch the configured local game executable
+            setup GAME_ID [--bottle-only]  Create a bottle; install a supported synced package
             compatibility GAME_ID [--json]  Read setup guidance and dated sources
             copy-key GAME_ID      Copy any catalog game's read-only key to the clipboard
             copy-key launcher     Copy the privately stored launcher key
@@ -92,17 +93,27 @@ struct MacETICLI {
             let (catalog, _) = try store.load()
             guard let game = catalog.game(id: rest[0]) else { throw ETIError("Game is not in this catalog.") }
             let runtime = try PreferencesStore(paths: paths).load().preferences(for: game.id).runtime.kind
-            let guide = try CompatibilityCatalog.bundled().guide(for: game.id, runtime: runtime)
+            let guide = try CompatibilityCatalog.bundled().guide(for: game.id, runtime: runtime, packageRevision: game.packageRevision)
             if rest.contains("--json") { try json(guide) }
             else {
                 print("\(game.title) · \(guide.route.title) · reviewed \(guide.reviewedAt)")
                 print(guide.profile?.summary ?? "General guidance only; no game-specific profile has been researched.")
-                print("Automatic setup is not available. Guidance is not a test result.")
+                print(guide.automaticSetupAvailable ? "Automatic package setup is available. Guidance is not a test result." : "Bottle creation is available; game installation requires manual setup.")
                 for note in guide.setup + guide.troubleshooting { print("\n\(note.title)\n\(note.detail)") }
                 print("\nWindows LAN checklist:")
                 for item in guide.lanChecklist { print("- \(item)") }
                 for source in guide.sources { print("\n\(source.title)\n\(source.url.absoluteString)\n\(source.context)") }
             }
+        case "setup":
+            try require(rest.count == 1 || (rest.count == 2 && rest[1] == "--bottle-only"))
+            let (catalog, _) = try store.load()
+            guard let game = catalog.game(id: rest[0]) else { throw ETIError("Game is not in this catalog.") }
+            let runtime = try PreferencesStore(paths: paths).load().preferences(for: game.id).runtime
+            let result = try CrossOverSetup(paths: paths).perform(gameID: game.id, revision: game.packageRevision,
+                mode: rest.contains("--bottle-only") ? .bottleOnly : .installPackage, expectedRuntime: runtime) {
+                    FileHandle.standardError.write(Data(($0 + "\n").utf8))
+                }
+            try json(result)
         case "copy-key":
             try require(rest.count == 1)
             let key: ReadOnlyKey

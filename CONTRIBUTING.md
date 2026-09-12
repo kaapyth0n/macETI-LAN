@@ -33,7 +33,7 @@ Guidance lives in `Sources/MacETICore/Resources/compatibility.json`; see [the pr
 4. Record the actual ETI package, game build, CrossOver/engine version, macOS version, chip, bottle Windows version, graphics settings and dependencies for a real trial.
 5. Report gameplay and Windows-host LAN results separately. Include both game versions, reconnect/map-change behavior, and whether WAN was disconnected after setup. Record Mac hosting separately.
 
-Prose or a successful observation does not enable automatic setup. A future recipe needs reproducible package-matched steps, constrained actions and rollback before it can be offered as an apply button.
+Prose or a successful observation does not enable automatic setup. Executable recipes live in `CrossOverSetup.swift` and must match an inspected package revision, layout and size. Add failure/cancellation/retry tests, preserve existing bottles and runtime edits, and test the real package separately before offering a setup button. See [setup architecture and recovery](docs/SETUP.md). Dependency installers and registry changes require dedicated reviewed actions; never interpret catalog strings as commands.
 
 Do not upload game archives, executables, cover collections, catalog databases, license files, sync keys or private logs. Summarize/redact reports instead of attaching an application-support directory. Screenshots should show only the relevant app UI.
 

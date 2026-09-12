@@ -57,7 +57,7 @@ public struct PreferencesStore: Sendable {
     }
 
     @discardableResult
-    public func update(_ gameID: String, _ change: (inout GamePreferences) -> Void) throws -> UserLibrary {
+    public func update(_ gameID: String, _ change: (inout GamePreferences) throws -> Void) throws -> UserLibrary {
         guard CatalogReader.validID(gameID) else { throw ETIError("Invalid game identifier.") }
         try paths.createDirectories()
         // Serialize the complete read/modify/write, including CLI and other app windows.
@@ -69,7 +69,7 @@ public struct PreferencesStore: Sendable {
         defer { flock(fd, LOCK_UN) }
         var library = try load()
         var preference = library.preferences(for: gameID)
-        change(&preference)
+        try change(&preference)
         try Self.validate(preference.runtime)
         library.games[gameID] = preference
         let encoder = JSONEncoder()
