@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentRevision": "2026-09-12.4",
+  "contentRevision": "2026-09-12.5",
   "reviewedAt": "2026-09-12",
   "sources": [
     {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
@@ -8,7 +8,7 @@
     {"id":"crosstie","title":"CrossTie installation profiles","url":"https://support.codeweavers.com/en_US/an-intermediate-guide-on-what-the-crosstie-editor-options-mean","context":"Official recipe documentation · installation and dependency mechanisms, not an M2 game test"},
     {"id":"amongus","title":"Among Us: CrossOver reports","url":"https://www.codeweavers.com/compatibility/crossover/among-us","context":"Community compatibility evidence · confirm the Mac platform, runtime version and game build"},
     {"id":"amongus-auth","title":"Among Us: SteamworksAuthFail","url":"https://innersloth.zendesk.com/hc/en-us/articles/7094045780500--SteamworksAuthFail-bug","context":"Publisher troubleshooting · launching outside Steam can cause account sign-in failure"},
-    {"id":"innersloth","title":"Among Us: official game information","url":"https://www.innersloth.com/games/among-us/","context":"Publisher · local Wi-Fi and cross-platform play; ETI interoperability is untested"},
+    {"id":"innersloth","title":"Among Us: official game information","url":"https://www.innersloth.com/games/among-us/","context":"Publisher · local Wi-Fi and cross-platform features; our ETI test results are recorded separately"},
     {"id":"l4d2","title":"Left 4 Dead 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/left-4-dead-2","context":"Historical community tips · mostly 2009–2010 · some Linux-specific"},
     {"id":"flat2","title":"FlatOut 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/flatout-2","context":"Historical community tips · 2009 · includes Linux audio advice"},
     {"id":"flat2-manual","title":"FlatOut 2: official PC manual","url":"https://cdn.cloudflare.steamstatic.com/steam/apps/2990/manuals/manual_en.pdf","context":"Publisher manual · separate configuration program controls resolution and colour depth"},
@@ -39,10 +39,10 @@
   ],
   "profiles": [
     {
-      "gameID":"amongus","revision":2,"reviewedPackageRevision":"20250308","route":"crossOver",
-      "summary":"ETI package 20250308 contains v2024.11.26s (build 4936). A short Skeld practice test rendered correctly and keyboard movement worked on M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. Local browsing is accessible; joining a Windows lobby and completing a round remain unverified.",
+      "gameID":"amongus","revision":3,"reviewedPackageRevision":"20250308","route":"crossOver",
+      "summary":"User-confirmed working LAN play with the Windows group on M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. ETI package 20250308 contains v2024.11.26s (build 4936). The agent separately verified Skeld practice rendering and keyboard movement. The successful LAN result is user-reported; reconnecting, Mac hosting and operation without WAN remain untested.",
       "setup":[{"title":"Match the participants' game versions","detail":"Use the same Windows package as the other ETI players and confirm the version shown in the game. The tested package reports v2024.11.26s, build 4936; a current store release may differ.","sourceIDs":["amongus","innersloth"]},{"title":"Start with the tested clean bottle","detail":"The trial used a dedicated Windows 10 64-bit bottle, Graphics Auto, no additional dependencies and no launch arguments. Extract the synced amongus.eti into a writable local folder, select Among Us.exe and its containing folder in Runtime. UnRAR 7.23 extracted the tested package with CRC validation. The game reported Direct3D 11 and rendered The Skeld without a Warcraft-style OpenGL override.","sourceIDs":["rarlab"]}],
-      "troubleshooting":[{"title":"Steam account error versus Local play","detail":"This direct launch showed SteamworksAuthFail. After closing the message, Play → Local and Play → Practice remained usable in the tested build. That does not establish online account functionality. Innersloth recommends launching through Steam for this sign-in error; do not treat it as a graphics failure or change DLLs to fix account authentication.","sourceIDs":["amongus-auth"]},{"title":"Test a waiting lobby and actual gameplay separately","detail":"The Local browser was empty when the other players had already started their round; discovery failure was not established. Repeat with a known waiting Windows lobby, then check joining, tasks, discussion, voting and reconnecting. The local practice test covered rendering and keyboard movement only.","sourceIDs":[]}],
+      "troubleshooting":[{"title":"Steam account error versus Local play","detail":"This direct launch showed SteamworksAuthFail. After closing the message, Play → Local and Play → Practice remained usable in the tested build, and the user later confirmed LAN play worked. That does not establish online account functionality. Innersloth recommends launching through Steam for this sign-in error; do not treat it as a graphics failure or change DLLs to fix account authentication.","sourceIDs":["amongus-auth"]},{"title":"Use a waiting lobby for discovery checks","detail":"The Local browser was initially empty when the other players had already started their round. The user subsequently confirmed successful LAN play with the Windows group. Repeat discovery checks with a known waiting lobby and matching builds. Tasks, discussion, voting and completed-round coverage were not individually recorded in that confirmation; record those details and reconnecting in future reports.","sourceIDs":[]}],
       "lanChecklist":["Join a Windows-hosted Local lobby with the same game version.","Complete a round, including discussion and voting, then rejoin.","Repeat with WAN disconnected after provisioning; record account and chat requirements."],
       "sourceIDs":["amongus","amongus-auth","innersloth","rarlab"]
     },

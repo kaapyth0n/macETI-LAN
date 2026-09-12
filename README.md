@@ -60,7 +60,7 @@ bash scripts/package-release.sh
 
 **Compatibility:** consult the sourced guidance and record an actual test. A successful launch does not establish LAN compatibility. The page distinguishes reaching a menu, gameplay, joining a Windows host and completing a LAN session. Historical results are flagged when the package or saved runtime configuration changes.
 
-The [Warcraft III setup notes](docs/WARCRAFT-III.md) cover the tested Frozen Throne build, OpenGL fix for black terrain, full-screen setup and Bonjour discovery. FlatOut 2's in-app guide includes the verified resolution setup. See the [observed results](docs/COMPATIBILITY.md#observed-game-results) for the limits of these tests.
+The [Warcraft III setup notes](docs/WARCRAFT-III.md) cover the tested Frozen Throne build, OpenGL fix for black terrain, full-screen setup and Bonjour discovery. FlatOut 2's in-app guide includes the verified resolution setup. Among Us has user-confirmed LAN play with the Windows group using CrossOver 26.3.0. See the [observed results](docs/COMPATIBILITY.md#observed-game-results) for the tested builds, settings and limits.
 
 ![Compatibility guidance](docs/compatibility-preview.jpg)
 
