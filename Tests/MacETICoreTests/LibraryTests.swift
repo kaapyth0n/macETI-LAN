@@ -80,8 +80,14 @@ final class LibraryTests: XCTestCase {
         config.arguments = ["+connect", "192.0.2.1", "$(touch /tmp/never-run-this)"]
         let command = try GameLauncher.command(for: config, crossOver: app)
         XCTAssertEqual(command.executable, wine)
-        XCTAssertEqual(command.arguments, ["--bottle", "LAN Games", "--cx-app", exe.path] + config.arguments)
+        XCTAssertEqual(command.arguments, ["--bottle", "LAN Games", "--workdir", exe.deletingLastPathComponent().path, "--", exe.path] + config.arguments)
         XCTAssertEqual(command.workingDirectory, exe.deletingLastPathComponent())
+        let gameDirectory = temporary.appendingPathComponent("Game Data", isDirectory: true)
+        try FileManager.default.createDirectory(at: gameDirectory, withIntermediateDirectories: true)
+        config.workingDirectory = gameDirectory.path
+        let customDirectoryCommand = try GameLauncher.command(for: config, crossOver: app)
+        XCTAssertEqual(customDirectoryCommand.arguments, ["--bottle", "LAN Games", "--workdir", gameDirectory.path, "--", exe.path] + config.arguments)
+        XCTAssertEqual(customDirectoryCommand.workingDirectory, gameDirectory)
         XCTAssertThrowsError(try GameLauncher.command(for: config, crossOver: nil))
         config.bottle = ""
         XCTAssertThrowsError(try GameLauncher.command(for: config, crossOver: app))

@@ -41,8 +41,12 @@ public enum GameLauncher {
             guard executable.pathExtension.lowercased() == "exe" else { throw ETIError("Choose a Windows .exe for CrossOver.") }
             let wine = crossOver.appendingPathComponent("Contents/SharedSupport/CrossOver/bin/wine")
             guard fm.isExecutableFile(atPath: wine.path) else { throw ETIError("The selected CrossOver installation is missing its Wine executable.") }
-            return LaunchCommand(executable: wine, arguments: ["--bottle", config.bottle, "--cx-app", executable.path] + config.arguments,
-                                 workingDirectory: workingDirectory ?? executable.deletingLastPathComponent())
+            let gameDirectory = workingDirectory ?? executable.deletingLastPathComponent()
+            // --cx-app searches bottle application names; a Mac path must be positional.
+            // Pass the folder explicitly so CrossOver converts it to the Windows working directory.
+            return LaunchCommand(executable: wine,
+                                 arguments: ["--bottle", config.bottle, "--workdir", gameDirectory.path, "--", executable.path] + config.arguments,
+                                 workingDirectory: gameDirectory)
         case .native:
             if executable.pathExtension.lowercased() == "app" {
                 guard Bundle(url: executable)?.executableURL != nil else { throw ETIError("Choose a valid Mac app bundle.") }
