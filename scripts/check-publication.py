@@ -11,7 +11,7 @@ import sys
 
 DENIED_PARTS = {'.build', '.swiftpm', '.local', 'dist', '.sync', 'Artwork', 'Runtimes', '__pycache__', 'xcuserdata'}
 DENIED_NAMES = {'library.json', 'compatibility-tests.json', 'catalog-receipt.json', 'bootstrap-receipt.json', '.DS_Store'}
-DENIED_SUFFIXES = {'.db', '.key', '.rsls', '.exe', '.dll', '.zip', '.dmg', '.tar', '.eti', '.pem', '.p12', '.log', '.pyc', '.icns'}
+DENIED_SUFFIXES = {'.db', '.key', '.w3k', '.w3g', '.w3z', '.w3x', '.w3m', '.w3n', '.rsls', '.exe', '.dll', '.zip', '.dmg', '.tar', '.eti', '.pem', '.p12', '.log', '.pyc', '.icns'}
 PATTERNS = {
     'literal Resilio-style key': re.compile(rb'(?<![A-Z2-7])[AB][A-Z2-7]{32}(?![A-Z2-7])'),
     'GitHub token': re.compile(rb'(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})'),
@@ -28,7 +28,7 @@ def main():
     issues = []
     for name in filter(None, names):
         path = PurePosixPath(name)
-        if (set(path.parts) & DENIED_PARTS or path.name in DENIED_NAMES or path.suffix in DENIED_SUFFIXES
+        if (set(path.parts) & DENIED_PARTS or path.name in DENIED_NAMES or path.suffix.lower() in DENIED_SUFFIXES
                 or '.sqlite' in path.name or path.name == '.env' or path.name.startswith('.env.')
                 or any(part.endswith('.app') or part.endswith('.iconset') for part in path.parts)):
             issues.append((name, 'private/generated payload'))

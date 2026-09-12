@@ -21,7 +21,8 @@ final class CompatibilityTests: XCTestCase {
 
     func testBundledProfilesCoverTargetsWithoutClaimingAutomaticSetup() throws {
         let catalog = try CompatibilityCatalog.bundled()
-        XCTAssertEqual(Set(catalog.profiles.map(\.gameID)), Set(GameProfile.selected.map(\.id)))
+        // Curated guidance can grow without changing which games are initially saved.
+        XCTAssertTrue(Set(GameProfile.selected.map(\.id)).isSubset(of: Set(catalog.profiles.map(\.gameID))))
         for profile in catalog.profiles {
             let guide = catalog.guide(for: profile.gameID, runtime: .crossOver)
             XCTAssertFalse(guide.automaticSetupAvailable)

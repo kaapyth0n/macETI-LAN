@@ -5,6 +5,8 @@ dist/
 *.db
 *.sqlite*
 *.key
+*.[wW]3[kK]
+*.[wW]3[gGzZxXmMnN]
 *.rsls
 .sync/
 .local/

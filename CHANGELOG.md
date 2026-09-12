@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Fix CrossOver launches when the executable and working directory use macOS paths.
+- Document the verified FlatOut 2 resolution setup and classic Warcraft III Frozen Throne setup, including OpenGL rendering, edition selection and Bonjour discovery.
+- Add Warcraft III's package-specific compatibility page and distinguish local gameplay, observed lobbies and user-reported LAN joining.
+- Exclude Warcraft license files, maps, saves and replays from source publication checks.
+
 ## 0.3.1 — Dock icon fix
 
 - Set the running application's Dock icon explicitly at startup, including when macOS retains an older placeholder icon for an app rebuilt in place.
@@ -14,4 +21,4 @@
 - Original app icon, packaged CLI, setup helpers and release checksums.
 - Public build/contribution documentation and macOS CI.
 
-Game installation, automatic setup recipes and actual ETI Mac–Windows LAN compatibility remain experimental and unverified.
+Game installation and Mac–Windows LAN compatibility remain experimental. See the compatibility notes for individual observations; automatic setup recipes are not implemented.

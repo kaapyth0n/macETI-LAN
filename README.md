@@ -16,7 +16,7 @@ A native macOS companion for the [ETI-LAN](https://www.eti-lan.xyz/?lang=en) gam
 - Save any title to **My games** and set up its individual read-only Resilio share.
 - Configure an existing CrossOver bottle and Windows executable, or choose a native Mac app/engine. Quake III defaults to the planned ioquake3 route; other games default to CrossOver.
 - Launch a prepared local game installation with its saved arguments and working folder.
-- Read dated setup guidance, troubleshooting and Windows LAN checklists. Among Us, Left 4 Dead 2, FlatOut 2, Call of Duty 2 and Quake III have dedicated guidance; other entries get general advice.
+- Read dated setup guidance, troubleshooting and Windows LAN checklists. Among Us, Left 4 Dead 2, FlatOut 2, Call of Duty 2, Quake III and classic Warcraft III have dedicated guidance; other entries get general advice.
 - Record gameplay and Windows LAN results separately, alongside package/runtime versions and the test environment.
 
 **The launcher is usable; game compatibility is still experimental.** No bundled profile certifies an ETI game or Mac–Windows multiplayer session. Resilio owns transfers and progress. Connecting a share requires its desktop app; macETI-LAN does not automatically install games, create CrossOver bottles, apply fixes or manage dependencies yet.
@@ -59,6 +59,8 @@ bash scripts/package-release.sh
 **Runtime:** choose the prepared local executable. CrossOver uses an existing bottle name and `.exe`; native mode accepts a Mac executable or `.app`. Arguments are entered one per line and passed directly, without shell expansion. Use a writable local installation for play, keeping settings/saves separate from the synced distribution package.
 
 **Compatibility:** consult the sourced guidance and record an actual test. A successful launch does not establish LAN compatibility. The page distinguishes reaching a menu, gameplay, joining a Windows host and completing a LAN session. Historical results are flagged when the package or saved runtime configuration changes.
+
+The [Warcraft III setup notes](docs/WARCRAFT-III.md) cover the tested Frozen Throne build, OpenGL fix for black terrain, full-screen setup and Bonjour discovery. FlatOut 2's in-app guide includes the verified resolution setup. See the [observed results](docs/COMPATIBILITY.md#observed-game-results) for the limits of these tests.
 
 ![Compatibility guidance](docs/compatibility-preview.jpg)
 
