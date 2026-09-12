@@ -1,6 +1,6 @@
 # Compatibility guidance — 12 September 2026
 
-The launcher provides sourced guidance on every game page, versioned profiles for six games, and private recording of manual test results. The source includes manual setup notes from actual FlatOut 2 and Warcraft III trials. It does not install prerequisites, change bottle settings or execute CrossTies. Changes under Unreleased in the changelog require a source build until a new binary is published.
+The launcher provides sourced guidance on every game page, versioned profiles for six games, and private recording of manual test results. The source includes manual setup notes from actual FlatOut 2, Warcraft III and Among Us trials. It does not install prerequisites, change bottle settings or execute CrossTies. Changes under Unreleased in the changelog require a source build until a new binary is published.
 
 ## User flow
 
@@ -12,7 +12,7 @@ The latest recorded result displays its environment and date. If the catalog pac
 
 ## Profile content
 
-`Sources/MacETICore/Resources/compatibility.json` has schema version 1 and content revision `2026-09-12.3`. It contains shared setup notes, source metadata and six profiles:
+`Sources/MacETICore/Resources/compatibility.json` has schema version 1 and content revision `2026-09-12.4`. It contains shared setup notes, source metadata and six profiles:
 
 | ETI ID | Route | Catalog package at research time |
 | --- | --- | --- |
@@ -23,7 +23,7 @@ The latest recorded result displays its environment and date. If the catalog pac
 | `quake3` | Native ioquake3 experiment | `20160922` |
 | `wc3` | CrossOver, built-in OpenGL renderer | `20260308` |
 
-These package revisions came from the live catalog. FlatOut 2 and Warcraft III packages were subsequently synced, inspected and tested as described below. The other entries remain research profiles. The page warns when a catalog revision changes. A curated route never overrides the user's saved runtime. Other games get shared guidance for their chosen runtime and an explicit unresearched status.
+These package revisions came from the live catalog. FlatOut 2, Warcraft III and Among Us packages were subsequently synced, inspected and tested as described below. The other entries remain research profiles. The page warns when a catalog revision changes. A curated route never overrides the user's saved runtime. Other games get shared guidance for their chosen runtime and an explicit unresearched status.
 
 The sources include [CrossOver 26 advanced settings](https://support.codeweavers.com/en_US/advanced-settings-in-crossover-mac-26), [CrossTie profile documentation](https://support.codeweavers.com/en_US/an-intermediate-guide-on-what-the-crosstie-editor-options-mean), CodeWeavers game-specific tips, [Innersloth](https://www.innersloth.com/games/among-us/) and [ioquake3](https://ioquake3.org/get-it/). Game-specific URLs and historical dates are retained in the JSON. Dynamic ratings are linked rather than presented as continuously current data.
 
@@ -37,9 +37,14 @@ Trials on 12 September 2026 used Apple M2 Pro, macOS 15.7.9 and CrossOver 26.3.0
 | --- | --- | --- |
 | FlatOut 2 v1.2, package `20160922` | User confirmed gameplay. Agent verified the full-screen profile menu at 1512×945, 32-bit colour, 16:10 after configuring with temporary `-setup` and removing the forced Wine virtual desktop. Microsoft's official June 2010 DirectX runtime was installed in this bottle. | Windows LAN race/derby, track change and reconnect. |
 | Warcraft III 1.30.4.11274, package `20260308` | User confirmed joining a Windows LAN match, but its 3D world was black. After adding `-opengl`, the agent verified terrain, models, portrait and movement in a short local run of the same custom map, both windowed and using macOS full-screen. The LAN browser showed waiting lobbies after the fix. | Joining and completing a LAN round with the final OpenGL configuration, map changes, reconnect, Mac hosting and operation without WAN. |
-| Among Us, Left 4 Dead 2, Call of Duty 2, Quake III | Research guidance only at this revision. | Package-specific gameplay and Windows interoperability. |
+| Among Us v2024.11.26s (build 4936), package `20250308` | Synced and extracted successfully; launched without extra dependencies or arguments. The Skeld practice map rendered correctly and keyboard movement worked. Local browsing was accessible after dismissing `SteamworksAuthFail`. | Joining a waiting Windows lobby, tasks, discussion, voting, completing a round and reconnecting. The Windows group had already begun its round when the browser was checked. |
+| Left 4 Dead 2, Call of Duty 2, Quake III | Research guidance only at this revision. | Package-specific gameplay and Windows interoperability. |
 
 The [Warcraft III runbook](WARCRAFT-III.md) records extraction, supplied setup helpers, expansion selection, resolution and Bonjour details. Private logs, screenshots with player identities, license material and test history stay outside the repository. No complete LAN round is certified by these observations.
+
+For Among Us, the tested dedicated bottle used a writable `C:\AmongUs` installation, `Among Us.exe`, its containing directory as the working folder, and no arguments. The archive was 445,998,660 bytes; UnRAR 7.23 extracted 110 files with successful CRC checks. The 32-bit Unity 2020.3.45f1 player reported Direct3D 11.0, feature level 11.1, on Apple M2 Pro. Mouse+Keyboard was already selected. No graphics override or additional runtime installer was needed for the short practice test.
+
+The direct Among Us launch could not sign into a Steam account. [Innersloth documents this error when launching outside Steam](https://innersloth.zendesk.com/hc/en-us/articles/7094045780500--SteamworksAuthFail-bug). Closing the error allowed Local and Practice in this particular build; online authentication was not repaired or tested. Native ports, account linking and a current store build are separate experiments.
 
 ## Data and packaging
 

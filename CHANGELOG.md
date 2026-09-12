@@ -6,6 +6,7 @@
 - Document the verified FlatOut 2 resolution setup and classic Warcraft III Frozen Throne setup, including OpenGL rendering, edition selection and Bonjour discovery.
 - Add Warcraft III's package-specific compatibility page and distinguish local gameplay, observed lobbies and user-reported LAN joining.
 - Exclude Warcraft license files, maps, saves and replays from source publication checks.
+- Record Among Us's clean-bottle startup and Skeld practice test, actual game version and distinction between Steam account errors and Local play.
 
 ## 0.3.1 — Dock icon fix
 

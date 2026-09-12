@@ -1,12 +1,13 @@
 {
   "schemaVersion": 1,
-  "contentRevision": "2026-09-12.3",
+  "contentRevision": "2026-09-12.4",
   "reviewedAt": "2026-09-12",
   "sources": [
     {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
     {"id":"cx26","title":"CrossOver 26: advanced settings","url":"https://support.codeweavers.com/en_US/advanced-settings-in-crossover-mac-26","context":"Official Mac documentation · CrossOver 26 and later · updated February 2026"},
     {"id":"crosstie","title":"CrossTie installation profiles","url":"https://support.codeweavers.com/en_US/an-intermediate-guide-on-what-the-crosstie-editor-options-mean","context":"Official recipe documentation · installation and dependency mechanisms, not an M2 game test"},
     {"id":"amongus","title":"Among Us: CrossOver reports","url":"https://www.codeweavers.com/compatibility/crossover/among-us","context":"Community compatibility evidence · confirm the Mac platform, runtime version and game build"},
+    {"id":"amongus-auth","title":"Among Us: SteamworksAuthFail","url":"https://innersloth.zendesk.com/hc/en-us/articles/7094045780500--SteamworksAuthFail-bug","context":"Publisher troubleshooting · launching outside Steam can cause account sign-in failure"},
     {"id":"innersloth","title":"Among Us: official game information","url":"https://www.innersloth.com/games/among-us/","context":"Publisher · local Wi-Fi and cross-platform play; ETI interoperability is untested"},
     {"id":"l4d2","title":"Left 4 Dead 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/left-4-dead-2","context":"Historical community tips · mostly 2009–2010 · some Linux-specific"},
     {"id":"flat2","title":"FlatOut 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/flatout-2","context":"Historical community tips · 2009 · includes Linux audio advice"},
@@ -38,12 +39,12 @@
   ],
   "profiles": [
     {
-      "gameID":"amongus","revision":1,"reviewedPackageRevision":"20250308","route":"crossOver",
-      "summary":"Start by testing the matching Windows build in CrossOver. Local Wi-Fi play is documented by the publisher, but this ETI package has not been tested on our Mac.",
-      "setup":[{"title":"Match the participants' game versions","detail":"Our first trial should use the same Windows package as the other ETI players. Confirm the actual version in the game; a current store release may differ from this package.","sourceIDs":["amongus","innersloth"]}],
-      "troubleshooting":[{"title":"Separate lobby, account and input problems","detail":"Record whether failure happens at startup, entering Local, joining a lobby or starting a round. Test keyboard/mouse controls and discussion/voting separately. Keep a native alternative as a separate runtime experiment.","sourceIDs":[]}],
+      "gameID":"amongus","revision":2,"reviewedPackageRevision":"20250308","route":"crossOver",
+      "summary":"ETI package 20250308 contains v2024.11.26s (build 4936). A short Skeld practice test rendered correctly and keyboard movement worked on M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. Local browsing is accessible; joining a Windows lobby and completing a round remain unverified.",
+      "setup":[{"title":"Match the participants' game versions","detail":"Use the same Windows package as the other ETI players and confirm the version shown in the game. The tested package reports v2024.11.26s, build 4936; a current store release may differ.","sourceIDs":["amongus","innersloth"]},{"title":"Start with the tested clean bottle","detail":"The trial used a dedicated Windows 10 64-bit bottle, Graphics Auto, no additional dependencies and no launch arguments. Extract the synced amongus.eti into a writable local folder, select Among Us.exe and its containing folder in Runtime. UnRAR 7.23 extracted the tested package with CRC validation. The game reported Direct3D 11 and rendered The Skeld without a Warcraft-style OpenGL override.","sourceIDs":["rarlab"]}],
+      "troubleshooting":[{"title":"Steam account error versus Local play","detail":"This direct launch showed SteamworksAuthFail. After closing the message, Play → Local and Play → Practice remained usable in the tested build. That does not establish online account functionality. Innersloth recommends launching through Steam for this sign-in error; do not treat it as a graphics failure or change DLLs to fix account authentication.","sourceIDs":["amongus-auth"]},{"title":"Test a waiting lobby and actual gameplay separately","detail":"The Local browser was empty when the other players had already started their round; discovery failure was not established. Repeat with a known waiting Windows lobby, then check joining, tasks, discussion, voting and reconnecting. The local practice test covered rendering and keyboard movement only.","sourceIDs":[]}],
       "lanChecklist":["Join a Windows-hosted Local lobby with the same game version.","Complete a round, including discussion and voting, then rejoin.","Repeat with WAN disconnected after provisioning; record account and chat requirements."],
-      "sourceIDs":["amongus","innersloth"]
+      "sourceIDs":["amongus","amongus-auth","innersloth","rarlab"]
     },
     {
       "gameID":"l4d2","revision":1,"reviewedPackageRevision":"20201021","route":"crossOver",
