@@ -12,6 +12,11 @@ struct MacETIApp: App {
                 .preferredColorScheme(.dark).tint(Theme.gold)
                 .onAppear {
                     NSApplication.shared.setActivationPolicy(.regular)
+                    // Refresh the running Dock tile even when Launch Services cached an older bundle icon.
+                    if let iconURL = Bundle.main.url(forResource: "AppIcon", withExtension: "icns"),
+                       let icon = NSImage(contentsOf: iconURL) {
+                        NSApplication.shared.applicationIconImage = icon
+                    }
                     NSApplication.shared.activate(ignoringOtherApps: true)
                 }
         }

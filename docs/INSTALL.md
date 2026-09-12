@@ -7,7 +7,7 @@ The current download targets Apple Silicon and macOS 14+. It includes the app, a
 Download the `macos-arm64.zip` and `.sha256` file from [GitHub Releases](https://github.com/kaapyth0n/macETI-LAN/releases/latest). In the folder containing both downloads, verify integrity with:
 
 ```sh
-shasum -a 256 -c macETI-LAN-v0.3.0-macos-arm64.zip.sha256
+shasum -a 256 -c macETI-LAN-v0.3.1-macos-arm64.zip.sha256
 ```
 
 Extract the ZIP, move `macETI-LAN.app` to Applications and open it. This preview is ad-hoc signed, not Developer ID signed or notarized. If macOS blocks it, use [Apple's per-app Open Anyway procedure](https://support.apple.com/en-gb/102445) after reviewing the download's source. Do not disable Gatekeeper globally.
