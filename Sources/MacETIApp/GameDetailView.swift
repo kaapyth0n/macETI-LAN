@@ -7,6 +7,7 @@ struct GameDetailView: View {
     let game: Game
     @Environment(\.dismiss) private var dismiss
     @State private var section = "overview"
+    @State private var showRemoval = false
     private var config: RuntimeConfiguration { library.preference(game).runtime }
     var body: some View {
         VStack(spacing: 0) {
@@ -43,7 +44,15 @@ struct GameDetailView: View {
                     }
                 }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
             }
+            Divider()
+            HStack {
+                Button("Remove game…", systemImage: "trash", role: .destructive) { showRemoval = true }
+                    .disabled(!library.preferencesAvailable || library.setupGameID != nil || library.removingGameID != nil || library.launchingIDs.contains(game.id))
+                    .help("Close the game and finish any setup before removing files.")
+                Spacer()
+            }.padding(.horizontal, 24).padding(.vertical, 12)
         }.frame(width: 770, height: 710).background(Theme.background).preferredColorScheme(.dark).tint(Theme.gold)
+            .sheet(isPresented: $showRemoval) { GameRemovalView(library: library, game: game) }
     }
 
     private var overview: some View {
@@ -59,7 +68,7 @@ struct GameDetailView: View {
                     .buttonStyle(.borderedProminent).disabled(game.readOnlyKey == nil)
                 Button("Runtime settings…", systemImage: "slider.horizontal.3") { section = "runtime" }
                 Button(library.launchingIDs.contains(game.id) ? "Launching…" : "Launch", systemImage: "play.fill") { library.launch(game) }
-                    .disabled(config.executablePath.isEmpty || !library.preferencesAvailable || library.launchingIDs.contains(game.id) || library.setupGameID == game.id)
+                    .disabled(config.executablePath.isEmpty || !library.preferencesAvailable || library.launchingIDs.contains(game.id) || library.setupGameID == game.id || library.removingGameID != nil)
             }
             CrossOverSetupView(library: library, game: game)
             Button("Compatibility & setup", systemImage: "checkmark.seal") { section = "compatibility" }
@@ -187,7 +196,7 @@ struct RuntimeSettingsView: View {
                     Text("See Compatibility for test results").font(.caption).foregroundStyle(.secondary)
                 }
                 Text(feedback).font(.callout).foregroundStyle(Theme.gold)
-            }.disabled(library.setupGameID == game.id)
+            }.disabled(library.setupGameID == game.id || library.removingGameID != nil)
         }
         .onChange(of: library.preference(game).runtime) { _, updated in
             config = updated

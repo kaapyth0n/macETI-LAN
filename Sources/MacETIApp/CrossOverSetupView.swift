@@ -39,7 +39,7 @@ struct CrossOverSetupView: View {
                         if config.bottle.isEmpty {
                             Button("Create bottle only", systemImage: "plus") { library.setUp(game, mode: .bottleOnly) }
                         } else { Text("Bottle: \(config.bottle)").font(.callout) }
-                    }.disabled(library.setupGameID != nil || !library.preferencesAvailable || formHasChanges ||
+                    }.disabled(library.setupGameID != nil || library.removingGameID != nil || !library.preferencesAvailable || formHasChanges ||
                                library.launchingIDs.contains(game.id) || GameLauncher.crossOverApp() == nil)
                     if formHasChanges { Text("Save your edited runtime settings before starting setup.").font(.caption).foregroundStyle(Theme.gold) }
                     if let other = library.setupGameID, other != game.id { Text("Another game's setup is running.").font(.caption) }

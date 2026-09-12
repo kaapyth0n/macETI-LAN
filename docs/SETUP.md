@@ -33,7 +33,7 @@ The page displays setup stages and a **Cancel setup** button. Downloads and extr
 - Receipts let setup recover a completed installation if saving runtime settings was interrupted. If files already occupy an unexpected destination, setup preserves them and reports the path.
 - Runtime preferences use a locked compare-and-update. If another window or CLI changed the runtime during setup, those newer settings are kept and the prepared bottle remains available for manual selection.
 - **Show setup logs** opens `~/Library/Application Support/macETI-LAN/Setup`. Receipts and logs remain private. After an app crash or forced quit, an unreferenced `.staging-…` directory may remain there; remove it only when setup is no longer running. Do not upload this directory to a public issue.
-- To remove an automatically created game, use CrossOver's normal bottle management after checking for saves. macETI-LAN does not automatically delete bottles or user data.
+- To remove game files, open **Remove game…** on the game page. Review saves before moving an installed copy or disconnected download to Trash. CrossOver bottles and setup receipts are retained for reuse; see [removal and recovery](REMOVING-GAMES.md).
 
 ## CLI and contributions
 

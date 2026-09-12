@@ -24,6 +24,7 @@ final class LibraryModel: ObservableObject {
     private var processes: [String: Process] = [:]
     @Published var launchingIDs: Set<String> = []
     @Published var setupGameID: String?
+    @Published var removingGameID: String?
     @Published var setupMessages: [String: String] = [:]
     private var setupCancellation: SetupCancellation?
 
@@ -76,12 +77,12 @@ final class LibraryModel: ObservableObject {
     }
 
     func saveRuntime(_ config: RuntimeConfiguration, for game: Game) throws {
-        guard setupGameID != game.id else { throw ETIError("Wait for setup to finish before changing this runtime.") }
+        guard setupGameID != game.id, removingGameID == nil else { throw ETIError("Wait for setup or removal to finish before changing this runtime.") }
         userLibrary = try preferences.update(game.id) { $0.runtime = config }
     }
 
     func setUp(_ game: Game, mode: CrossOverSetupMode) {
-        guard setupGameID == nil, preferencesAvailable, !launchingIDs.contains(game.id) else { return }
+        guard setupGameID == nil, removingGameID == nil, preferencesAvailable, !launchingIDs.contains(game.id) else { return }
         let cancellation = SetupCancellation()
         setupCancellation = cancellation
         setupGameID = game.id
@@ -115,8 +116,24 @@ final class LibraryModel: ObservableObject {
         if let setupGameID { setupMessages[setupGameID] = "Cancelling… Bottle creation, if underway, will finish first." }
     }
 
+    func remove(_ game: Game, plan: GameRemovalPlan, kinds: Set<GameRemovalKind>, gameClosed: Bool, disconnected: Bool) async throws {
+        guard setupGameID == nil, removingGameID == nil, preferencesAvailable, !launchingIDs.contains(game.id) else {
+            throw ETIError("Close the game and wait for setup or removal to finish, then retry.")
+        }
+        removingGameID = game.id
+        defer { removingGameID = nil }
+        let worker = GameRemoval(paths: store.paths)
+        _ = try await Task.detached {
+            try worker.perform(plan, kinds: kinds, gameClosed: gameClosed, downloadDisconnected: disconnected)
+        }.value
+        do { userLibrary = try preferences.load() }
+        catch { preferencesAvailable = false; throw error }
+        setupMessages[game.id] = nil
+        message = "Selected files for \(game.title) were moved to Trash. Check for saves, then empty those items in Finder to free disk space."
+    }
+
     func launch(_ game: Game) {
-        guard !launchingIDs.contains(game.id), setupGameID != game.id else { return }
+        guard !launchingIDs.contains(game.id), setupGameID != game.id, removingGameID == nil else { return }
         do {
             let command = try GameLauncher.command(for: preference(game).runtime)
             let process = try GameLauncher.launch(command)

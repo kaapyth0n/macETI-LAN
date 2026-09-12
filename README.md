@@ -16,6 +16,7 @@ A native macOS companion for the [ETI-LAN](https://www.eti-lan.xyz/?lang=en) gam
 - Save any title to **My games** and set up its individual read-only Resilio share.
 - Create a CrossOver bottle from the game page, automatically prepare supported synced packages, or choose an existing bottle/native Mac app. Quake III defaults to the tested native ioquake3 route; other games default to CrossOver.
 - Launch a prepared local game installation with its saved arguments and working folder.
+- Remove an installed copy, its synced download, or both from the game page, with folder sizes and a review before moving files to Trash.
 - Read dated setup guidance, troubleshooting and Windows LAN checklists. Among Us, Left 4 Dead 2, FlatOut 2, Call of Duty 2, Quake III, classic Warcraft III and Rocket League have dedicated guidance; other entries get general advice.
 - Record gameplay and Windows LAN results separately, alongside package/runtime versions and the test environment.
 
@@ -59,6 +60,8 @@ bash scripts/package-release.sh
 **Set up:** after syncing, choose **Set up game** on Among Us or Rocket League. The app creates a dedicated Windows 10 bottle, extracts the game and saves its launch settings. For other Windows games, **Create bottle only** saves a fresh bottle; follow Compatibility for the remaining installation. Existing configured games are preserved. See [automatic setup](docs/SETUP.md) for supported revisions and recovery.
 
 **Runtime:** manual settings remain available for existing bottles and executables; native mode accepts a Mac executable or `.app`. Arguments are entered one per line and passed directly, without shell expansion. Use a writable local installation for play, keeping settings/saves separate from the synced distribution package.
+
+**Remove:** open a game → **Remove game…** → choose **Installed copy**, **Synced download**, or both. Close the game first. For a download, disconnect its folder in Resilio on this Mac and confirm that in the dialog. Review the paths and saves, then choose **Move to Trash**. Empty those items in Finder to reclaim disk space. CrossOver bottles are kept. See [removal and recovery](docs/REMOVING-GAMES.md) for supported folders, saves and reinstalling.
 
 **Compatibility:** consult the sourced guidance and record an actual test. A successful launch does not establish LAN compatibility. The page distinguishes reaching a menu, gameplay, joining a Windows host and completing a LAN session. Historical results are flagged when the package or saved runtime configuration changes.
 

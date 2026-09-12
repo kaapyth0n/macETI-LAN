@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.5.0 — Game removal
+
+- Add **Remove game…** to every game page. Review folder paths and estimated sizes, then move the installed copy, synced download, or both to Trash.
+- Require a closed game and a manual Resilio disconnection for download removal. Preserve CrossOver bottles, external saves, catalog entries and My games selections.
+- Protect shared and linked folders, serialize removal with setup, recheck changed paths/settings and restore moved folders if an operation fails.
 
 - Record Left 4 Dead 2's supplied-overlay startup fix, local gameplay test, full-screen settings and observed LAN peer discovery.
 
