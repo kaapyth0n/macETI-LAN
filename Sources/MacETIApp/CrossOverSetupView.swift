@@ -21,24 +21,25 @@ struct CrossOverSetupView: View {
                     Text(executablePresent ? "Your existing installation is kept. Use Launch to play." : "Select the correct executable in Runtime. Your saved bottle is preserved.").font(.callout).foregroundStyle(.secondary)
                 } else {
                     if recipe != nil {
-                        Text("Create a Windows 10 bottle, extract the synced package and save the launch settings. Finish the Resilio transfer first.")
+                        Text(config.bottle.isEmpty ? "Install the synced game and fill in its launch settings automatically. A Windows 10 bottle will be created for you. Finish the Resilio transfer first." : "Install the synced game into the bottle you already created and fill in its launch settings automatically. Finish the Resilio transfer first.")
+                        if let name = recipe?.launchName { Text("This package will launch \(name).").font(.callout).foregroundStyle(Theme.gold) }
                         Text("First setup downloads the checked UnRAR 7.23 tool from RARLAB (about 654 KB). Game files come from your synced folder.")
                             .font(.caption).foregroundStyle(.secondary)
                     } else {
-                        Text("Create and save a dedicated Windows 10 bottle. Then follow Compatibility for this game's installation and select its executable in Runtime.")
+                        Text("Automatic installation is not supported for this package yet. Creating a bottle only prepares the Windows environment; the game still needs to be installed manually.")
                             .font(.callout).foregroundStyle(.secondary)
                     }
                     if GameLauncher.crossOverApp() == nil {
                         Link("Install and activate CrossOver first", destination: URL(string: "https://www.codeweavers.com/crossover")!)
                     }
                     HStack {
-                        if recipe != nil {
-                            Button("Set up game", systemImage: "wand.and.stars") { library.setUp(game, mode: .installPackage) }
+                        if let recipe {
+                            Button("Set up \(recipe.launchName ?? "game")", systemImage: "wand.and.stars") { library.setUp(game, mode: .installPackage) }
                                 .buttonStyle(.borderedProminent)
                         }
-                        if config.bottle.isEmpty {
+                        if config.bottle.isEmpty && recipe == nil {
                             Button("Create bottle only", systemImage: "plus") { library.setUp(game, mode: .bottleOnly) }
-                        } else { Text("Bottle: \(config.bottle)").font(.callout) }
+                        } else if !config.bottle.isEmpty { Text("Bottle: \(config.bottle)").font(.callout) }
                     }.disabled(library.setupGameID != nil || library.removingGameID != nil || !library.preferencesAvailable || formHasChanges ||
                                library.launchingIDs.contains(game.id) || GameLauncher.crossOverApp() == nil)
                     if formHasChanges { Text("Save your edited runtime settings before starting setup.").font(.caption).foregroundStyle(Theme.gold) }
@@ -50,7 +51,7 @@ struct CrossOverSetupView: View {
                         Button("Cancel setup") { library.cancelSetup() }
                     }
                 }
-                if let message = library.setupMessages[game.id] {
+                if let message = library.setupMessages[game.id], busy || config.executablePath.isEmpty {
                     Text(message).font(.callout).foregroundStyle(Theme.gold).textSelection(.enabled)
                     Button("Show setup logs") { NSWorkspace.shared.open(CrossOverSetup(paths: library.store.paths).logs) }
                         .font(.caption)

@@ -7,7 +7,7 @@ The current download targets Apple Silicon and macOS 14+. It includes the app, a
 Download the `macos-arm64.zip` and `.sha256` file from [GitHub Releases](https://github.com/kaapyth0n/macETI-LAN/releases/latest). In the folder containing both downloads, verify integrity with:
 
 ```sh
-shasum -a 256 -c macETI-LAN-v0.4.0-macos-arm64.zip.sha256
+shasum -a 256 -c macETI-LAN-v0.6.0-macos-arm64.zip.sha256
 ```
 
 Extract the ZIP, move `macETI-LAN.app` to Applications and open it. This preview is ad-hoc signed, not Developer ID signed or notarized. If macOS blocks it, use [Apple's per-app Open Anyway procedure](https://support.apple.com/en-gb/102445) after reviewing the download's source. Do not disable Gatekeeper globally.
@@ -49,9 +49,9 @@ Restart the app after importing covers. The helper extracts only matching catalo
 
 Open a game's **Sync** tab, copy its individual key, and connect it in Resilio using the displayed game folder. For the complete package, turn Selective Sync off for that game's share. Check Resilio for transfer completion.
 
-Install and activate CrossOver first. For Among Us (package `20250308`) and Rocket League (`20260410`), choose **Set up game** from Overview or Runtime, wait for **Ready to launch**, then click **Launch**. Setup downloads the pinned UnRAR 7.23 tool from RARLAB on first use, extracts into a new writable bottle and saves all launch paths. It leaves an existing configured installation intact.
+Install and activate CrossOver first. For Among Us (package `20250308`) and Rocket League (`20260410`), choose **Set up game** from Overview or Runtime. For Half-Life / Counter-Strike (Goldsrc), package `20240623`, choose **Set up Counter-Strike 1.6**. Wait for setup to finish, then click **Launch**. Setup downloads the pinned UnRAR 7.23 tool from RARLAB on first use, creates or reuses its dedicated bottle, extracts the game and fills in all launch paths and arguments. It leaves an existing configured installation intact.
 
-For other Windows games, **Create bottle only** creates and saves a Windows 10 64-bit bottle. Follow **Compatibility** for game installation and dependencies, then select the prepared executable in **Runtime**. Native mode accepts an installed Mac engine/app. [Setup details and recovery](https://github.com/kaapyth0n/macETI-LAN/blob/main/docs/SETUP.md).
+For other Windows games, **Create bottle only** creates an empty Windows 10 environment. Automatic game installation is not supported for those packages yet; manual installation and executable selection are still required. Check **Compatibility** for available game-specific guidance. Native mode accepts an installed Mac engine/app. [Setup details and recovery](https://github.com/kaapyth0n/macETI-LAN/blob/main/docs/SETUP.md).
 
 The launcher opening successfully does not establish that a game works on macOS or can join Windows players. Match game versions and test LAN play before an event.
 

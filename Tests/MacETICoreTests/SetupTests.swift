@@ -17,7 +17,7 @@ final class SetupTests: XCTestCase {
         + "\n        Name: Game_Data\n        Type: Directory\n"
     }
 
-    private func setup() throws -> CrossOverSetup {
+    private func setup(recipe override: CrossOverRecipe? = nil) throws -> CrossOverSetup {
         let app = home.appendingPathComponent("Cross Over.app")
         let bin = app.appendingPathComponent("Contents/SharedSupport/CrossOver/bin")
         try FileManager.default.createDirectory(at: bin, withIntermediateDirectories: true)
@@ -28,7 +28,7 @@ final class SetupTests: XCTestCase {
         }
         var setup = CrossOverSetup(paths: paths, home: home, crossOver: app)
         let bottles = setup.bottles
-        let recipe = self.recipe
+        let recipe = override ?? self.recipe
         setup.archiveTool = { _, _, _ in URL(fileURLWithPath: "/synthetic/unrar") }
         setup.run = { exe, args, log, _ in
             if exe.lastPathComponent == "cxbottle" {
@@ -40,16 +40,21 @@ final class SetupTests: XCTestCase {
                 try Data(Self.listing(recipe).utf8).write(to: log)
             } else if args.first == "x" {
                 let destination = URL(fileURLWithPath: args.last!)
-                for file in recipe.requiredFiles { try Data("synthetic fixture".utf8).write(to: destination.appendingPathComponent(file)) }
+                for file in recipe.requiredFiles {
+                    let target = destination.appendingPathComponent(file)
+                    try FileManager.default.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+                    try Data("synthetic fixture: \(file)".utf8).write(to: target)
+                }
             } else { XCTFail("Unexpected setup command") }
         }
         return setup
     }
 
-    private func package() throws {
+    private func package(recipe override: CrossOverRecipe? = nil) throws {
+        let recipe = override ?? self.recipe
         let folder = try paths.gameDirectory(recipe.gameID)
         try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
-        let file = folder.appendingPathComponent("amongus.eti")
+        let file = folder.appendingPathComponent("\(recipe.gameID).eti")
         FileManager.default.createFile(atPath: file.path, contents: nil)
         let handle = try FileHandle(forWritingTo: file)
         // Sparse placeholder; extraction is mocked. No commercial game data in tests.
@@ -155,8 +160,54 @@ final class SetupTests: XCTestCase {
         let catalog = try CompatibilityCatalog.bundled()
         XCTAssertTrue(catalog.guide(for: "amongus", runtime: .crossOver, packageRevision: "20250308").automaticSetupAvailable)
         XCTAssertTrue(catalog.guide(for: "rocket", runtime: .crossOver, packageRevision: "20260410").automaticSetupAvailable)
+        XCTAssertTrue(catalog.guide(for: "goldsrc", runtime: .crossOver, packageRevision: "20240623").automaticSetupAvailable)
+        XCTAssertFalse(catalog.guide(for: "goldsrc", runtime: .crossOver, packageRevision: "future").automaticSetupAvailable)
+        XCTAssertFalse(catalog.guide(for: "goldsrc", runtime: .native, packageRevision: "20240623").automaticSetupAvailable)
         XCTAssertFalse(catalog.guide(for: "amongus", runtime: .native, packageRevision: "20250308").automaticSetupAvailable)
         XCTAssertFalse(catalog.guide(for: "amongus", runtime: .crossOver, packageRevision: "future").automaticSetupAvailable)
         XCTAssertFalse(catalog.guide(for: "factorio", runtime: .crossOver, packageRevision: "20250308").automaticSetupAvailable)
+    }
+
+    func testGoldSrcInstallationContinuesExistingBottleAndSelectsCS16() throws {
+        let recipe = try XCTUnwrap(CrossOverRecipe.recipe(for: "goldsrc", revision: "20240623"))
+        var worker = try setup(recipe: recipe)
+        let bottle = try worker.perform(gameID: recipe.gameID, revision: recipe.packageRevision, mode: .bottleOnly, expectedRuntime: .init()) { _ in }
+        XCTAssertTrue(bottle.executablePath.isEmpty)
+        try package(recipe: recipe)
+        let original = worker.run
+        worker.run = { exe, args, log, cancellable in
+            XCTAssertNotEqual(exe.lastPathComponent, "cxbottle", "Reuse the bottle the user already created")
+            try original(exe, args, log, cancellable)
+        }
+        let result = try worker.perform(gameID: recipe.gameID, revision: recipe.packageRevision, mode: .installPackage, expectedRuntime: bottle) { _ in }
+        XCTAssertEqual(result.bottle, bottle.bottle)
+        XCTAssertTrue(result.executablePath.hasSuffix("/GoldSrc/hl-cs16/SmartSteamLoader.exe"))
+        XCTAssertTrue(result.workingDirectory.hasSuffix("/GoldSrc/hl-cs16"))
+        XCTAssertEqual(result.arguments, ["-game", "cstrike"])
+        let settings = URL(fileURLWithPath: result.workingDirectory).appendingPathComponent("SmartSteamEmu.ini")
+        XCTAssertEqual(try String(contentsOf: settings, encoding: .utf8), "synthetic fixture: SmartSteamEmu.ini")
+        XCTAssertTrue(FileManager.default.fileExists(atPath: try paths.gameDirectory(recipe.gameID).appendingPathComponent("goldsrc.eti").path))
+        try Data("user settings".utf8).write(to: settings)
+        worker.run = { _, _, _, _ in XCTFail("Configured installation must remain intact") }
+        _ = try worker.perform(gameID: recipe.gameID, revision: recipe.packageRevision, mode: .installPackage, expectedRuntime: result) { _ in }
+        XCTAssertEqual(try String(contentsOf: settings, encoding: .utf8), "user settings")
+    }
+
+    func testGoldSrcIncompleteLayoutPreservesEmptyBottleForRetry() throws {
+        let recipe = try XCTUnwrap(CrossOverRecipe.recipe(for: "goldsrc", revision: "20240623"))
+        var worker = try setup(recipe: recipe)
+        try package(recipe: recipe)
+        let bottle = try worker.perform(gameID: recipe.gameID, revision: recipe.packageRevision, mode: .bottleOnly, expectedRuntime: .init()) { _ in }
+        let original = worker.run
+        worker.run = { exe, args, log, cancellable in
+            try original(exe, args, log, cancellable)
+            if args.first == "x" {
+                try FileManager.default.removeItem(at: URL(fileURLWithPath: args.last!).appendingPathComponent("hl-cs16/cstrike/dlls/mp.dll"))
+            }
+        }
+        XCTAssertThrowsError(try worker.perform(gameID: recipe.gameID, revision: recipe.packageRevision, mode: .installPackage, expectedRuntime: bottle) { _ in })
+        XCTAssertEqual(try PreferencesStore(paths: paths).load().preferences(for: recipe.gameID).runtime, bottle)
+        XCTAssertFalse(FileManager.default.fileExists(atPath: worker.bottles.appendingPathComponent(bottle.bottle + "/drive_c/GoldSrc").path))
+        XCTAssertFalse(try FileManager.default.contentsOfDirectory(atPath: worker.logs.path).contains { $0.hasPrefix(".staging-") })
     }
 }

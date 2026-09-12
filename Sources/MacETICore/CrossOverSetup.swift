@@ -9,6 +9,14 @@ public struct CrossOverRecipe: Sendable {
     let archiveBytes: Int64
     let maximumExpandedBytes: Int64
     let requiredFiles: [String]
+    public var launchName: String? = nil
+    public var arguments: [String] = []
+    var configurationCopies: [ConfigurationCopy] = []
+
+    struct ConfigurationCopy: Sendable {
+        let source: String
+        let destination: String
+    }
 
     public static func recipe(for gameID: String, revision: String) -> Self? {
         recipes.first { $0.gameID == gameID && $0.packageRevision == revision }
@@ -19,7 +27,14 @@ public struct CrossOverRecipe: Sendable {
               requiredFiles: ["Among Us.exe", "UnityPlayer.dll", "GameAssembly.dll"]),
         .init(gameID: "rocket", packageRevision: "20260410", folder: "RocketLeague", executable: "SmartSteamLoader.exe",
               archiveBytes: 7_122_959_252, maximumExpandedBytes: 10_000_000_000,
-              requiredFiles: ["SmartSteamLoader.exe", "SmartSteamEmu.ini", "Binaries/Win32/RocketLeague.exe"])
+              requiredFiles: ["SmartSteamLoader.exe", "SmartSteamEmu.ini", "Binaries/Win32/RocketLeague.exe"]),
+        .init(gameID: "goldsrc", packageRevision: "20240623", folder: "GoldSrc", executable: "hl-cs16/SmartSteamLoader.exe",
+              archiveBytes: 1_026_965_875, maximumExpandedBytes: 3_000_000_000,
+              requiredFiles: ["SmartSteamEmu.ini", "hl-cs16/SmartSteamEmu.ini", "hl-cs16/SmartSteamLoader.exe",
+                              "hl-cs16/hl.exe", "hl-cs16/hw.dll", "hl-cs16/cstrike/liblist.gam",
+                              "hl-cs16/cstrike/dlls/mp.dll", "hl-cs16/cstrike/cl_dlls/client.dll", "hl-cs16/cstrike/maps/de_dust2.bsp"],
+              launchName: "Counter-Strike 1.6", arguments: ["-game", "cstrike"],
+              configurationCopies: [.init(source: "SmartSteamEmu.ini", destination: "hl-cs16/SmartSteamEmu.ini")])
     ]
 }
 
@@ -113,7 +128,7 @@ public struct CrossOverSetup: Sendable {
         if receipt.bottleCreated { try validateBottle(receipt.bottle) }
         let log = logs.appendingPathComponent("\(gameID)-setup.log")
         let recipe = CrossOverRecipe.recipe(for: gameID, revision: revision)
-        if mode == .installPackage && recipe == nil { throw ETIError("This package revision has no automatic install recipe. Create a bottle and follow Compatibility for manual setup.") }
+        if mode == .installPackage && recipe == nil { throw ETIError("Automatic installation is not supported for this package revision yet. Creating a bottle only prepares the Windows environment; it does not install the game.") }
 
         var stage: URL?
         defer { if let stage { try? fm.removeItem(at: stage) } }
@@ -151,6 +166,12 @@ public struct CrossOverSetup: Sendable {
                     throw ETIError("The package changed during extraction. Let Resilio finish, then retry.")
                 }
                 try validateInstalled(recipe, at: staging)
+                // Only reviewed copies inside a freshly validated staging directory.
+                // Existing installations and synced packages are never rewritten.
+                for copy in recipe.configurationCopies {
+                    try fm.removeItem(at: staging.appendingPathComponent(copy.destination))
+                    try fm.copyItem(at: staging.appendingPathComponent(copy.source), to: staging.appendingPathComponent(copy.destination))
+                }
             }
         }
 
@@ -179,9 +200,9 @@ public struct CrossOverSetup: Sendable {
                 try save(receipt, at: receiptURL)
                 try fm.moveItem(at: stage, to: destination)
             }
-            config.workingDirectory = destination.path
             config.executablePath = destination.appendingPathComponent(recipe.executable).path
-            config.arguments = []
+            config.workingDirectory = URL(fileURLWithPath: config.executablePath).deletingLastPathComponent().path
+            config.arguments = recipe.arguments
         }
         progress("Saving launch settings…")
         try preferences.update(gameID) {
@@ -190,8 +211,15 @@ public struct CrossOverSetup: Sendable {
             }
             $0.runtime = config
         }
-        progress(mode == .installPackage ? "Ready to launch." : "Bottle created and saved. Select the installed executable below; see Compatibility for any extra setup.")
+        progress(mode == .installPackage ? "Ready to launch." : Self.bottleReadyMessage(recipe: recipe))
         return config
+    }
+
+    public static func bottleReadyMessage(recipe: CrossOverRecipe?) -> String {
+        if let recipe {
+            return "Windows environment ready. Next, choose Set up \(recipe.launchName ?? "game") to install the synced package and fill in all launch settings."
+        }
+        return "Windows environment ready; the game is not installed. Automatic installation for this package is not supported yet. Manual installation is required before selecting an executable."
     }
 
     private func package(for recipe: CrossOverRecipe) throws -> URL {

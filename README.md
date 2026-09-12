@@ -17,10 +17,10 @@ A native macOS companion for the [ETI-LAN](https://www.eti-lan.xyz/?lang=en) gam
 - Create a CrossOver bottle from the game page, automatically prepare supported synced packages, or choose an existing bottle/native Mac app. Quake III defaults to the tested native ioquake3 route; other games default to CrossOver.
 - Launch a prepared local game installation with its saved arguments and working folder.
 - Remove an installed copy, its synced download, or both from the game page, with folder sizes and a review before moving files to Trash.
-- Read dated setup guidance, troubleshooting and Windows LAN checklists. Among Us, Left 4 Dead 2, FlatOut 2, Call of Duty 2, Quake III, classic Warcraft III and Rocket League have dedicated guidance; other entries get general advice.
+- Read dated setup guidance, troubleshooting and Windows LAN checklists. Among Us, Counter-Strike 1.6 (GoldSrc), Left 4 Dead 2, FlatOut 2, Call of Duty 2, Quake III, classic Warcraft III and Rocket League have dedicated guidance; other entries get general advice.
 - Record gameplay and Windows LAN results separately, alongside package/runtime versions and the test environment.
 
-**The launcher is usable; game compatibility is still experimental.** No bundled profile certifies an ETI game or Mac–Windows multiplayer session. Resilio owns transfers and progress. Connecting a share requires its desktop app. Automatic setup covers the tested Among Us and Rocket League package revisions; other Windows games have bottle creation plus manual installation guidance. CrossOver itself must already be installed and activated.
+**The launcher is usable; game compatibility is still experimental.** No bundled profile certifies an ETI game or Mac–Windows multiplayer session. Resilio owns transfers and progress. Connecting a share requires its desktop app. Automatic setup covers the inspected Among Us, Rocket League and CS 1.6/GoldSrc package revisions; other Windows games have bottle creation and require manual installation. CrossOver itself must already be installed and activated.
 
 No games, sync keys, catalog database, cover archive or third-party runtime are included. Resilio, CrossOver and any game/port must be obtained separately. This is an independent project, not an official ETI-LAN, Resilio or CodeWeavers product.
 
@@ -57,7 +57,7 @@ bash scripts/package-release.sh
 
 **Sync:** open a game → **Sync** → copy its key and open Resilio → use **+ → Enter a key or link** → choose the displayed folder. Finish connecting and check transfer completion in Resilio. Saving or unsaving **My games** never changes subscriptions.
 
-**Set up:** after syncing, choose **Set up game** on Among Us or Rocket League. The app creates a dedicated Windows 10 bottle, extracts the game and saves its launch settings. For other Windows games, **Create bottle only** saves a fresh bottle; follow Compatibility for the remaining installation. Existing configured games are preserved. See [automatic setup](docs/SETUP.md) for supported revisions and recovery.
+**Set up:** after syncing, choose **Set up game** on Among Us or Rocket League, or **Set up Counter-Strike 1.6** on Half-Life / Counter-Strike (Goldsrc). The app creates or reuses its dedicated Windows 10 bottle, extracts the game and fills in the executable, working folder and arguments. For other Windows games, **Create bottle only** saves an empty Windows environment; manual game installation is still required. Existing configured games are preserved. See [automatic setup](docs/SETUP.md) for supported revisions and recovery.
 
 **Runtime:** manual settings remain available for existing bottles and executables; native mode accepts a Mac executable or `.app`. Arguments are entered one per line and passed directly, without shell expansion. Use a writable local installation for play, keeping settings/saves separate from the synced distribution package.
 
@@ -83,6 +83,7 @@ After building, use `.build/debug/maceti` or `.build/release/maceti`. The downlo
 .build/debug/maceti copy-key factorio
 .build/debug/maceti compatibility flat2
 .build/debug/maceti setup amongus
+.build/debug/maceti setup goldsrc
 .build/debug/maceti setup factorio --bottle-only
 .build/debug/maceti launch factorio --dry-run
 ```

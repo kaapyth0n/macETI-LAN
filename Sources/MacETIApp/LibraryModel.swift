@@ -98,7 +98,7 @@ final class LibraryModel: ObservableObject {
                         }
                     }
                 }.value
-                setupMessages[game.id] = mode == .installPackage ? "Ready to launch." : "Bottle ready. Select the installed executable in Runtime; see Compatibility for extra setup."
+                setupMessages[game.id] = mode == .installPackage ? "Ready to launch." : CrossOverSetup.bottleReadyMessage(recipe: .recipe(for: game.id, revision: game.packageRevision))
             } catch is CancellationError {
                 setupMessages[game.id] = "Setup cancelled. Extracted staging files were removed. Any new bottle was kept for the next attempt."
             } catch {

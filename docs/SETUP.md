@@ -2,17 +2,21 @@
 
 Install and activate CrossOver, finish syncing the game in Resilio, then open the game in macETI-LAN.
 
-- **Set up game** in Overview or Runtime prepares a supported package and saves all launch settings. When it says **Ready to launch**, use **Launch**.
-- **Create bottle only** creates and saves a dedicated Windows 10 64-bit bottle for any game using CrossOver. Follow Compatibility for installation and prerequisites, then select its installed executable in Runtime.
+- **Set up game** in Overview or Runtime prepares a supported package and saves all launch settings. GoldSrc calls this **Set up Counter-Strike 1.6** to identify the game selected from its multi-game package. Use **Launch** when the runtime is configured.
+- If you already used **Create bottle only**, the full setup action reuses that macETI-created bottle. You do not need to locate an executable or enter paths yourself.
+- For packages without automatic installation, **Create bottle only** prepares an empty Windows 10 environment. It does not extract or install the game, and the page explains that manual installation is still required. The CLI retains `--bottle-only` for advanced use on any Windows game.
 - An existing configured game is preserved. Setup does not upgrade it when Resilio receives a newer package.
 
 | Game | Exact ETI package | Automatic steps |
 | --- | --- | --- |
 | Among Us | `20250308` | Create bottle; extract `amongus.eti` into `C:\AmongUs`; select `Among Us.exe`, its containing folder and no arguments. |
 | Rocket League | `20260410` | Create bottle; extract `rocket.eti` into `C:\RocketLeague`; select the supplied `SmartSteamLoader.exe`, its containing folder and no arguments, matching the Windows package's launch entry point. |
+| Counter-Strike 1.6 / GoldSrc | `20240623` | Create or reuse bottle; extract `goldsrc.eti` into `C:\GoldSrc`; copy the supplied root launcher configuration into `hl-cs16`; select `hl-cs16\SmartSteamLoader.exe`, its containing directory and `-game cstrike`. |
 | Other Windows games | Any | Create and save a bottle. Game extraction, prerequisites and game-specific settings remain manual. |
 
 These recipes reproduce the tested clean-bottle baseline on CrossOver 26.3.0, Apple M2 Pro and macOS 15.7.9. They use CrossOver's default graphics settings, with no extra dependency installer, registry change or display override. Full package extraction currently requires Apple Silicon. CrossOver must be in `/Applications` or `~/Applications`, using its default per-user bottle location.
+
+GoldSrc setup was tested by continuing a bottle the user had already created. The 1,026,965,875-byte archive expands to 2,300,436,864 bytes and contains CS 1.6, CS 1.5 and Half-Life. The automatic recipe selects CS 1.6 and reached its full-screen menu; the other variants, gameplay and LAN joining remain untested. See [the GoldSrc notes](GOLDSRC.md).
 
 Warcraft III still needs its supplied key/profile helpers, Windows Bonjour and the documented OpenGL/window settings. FlatOut 2 needs its DirectX and resolution steps. Their existing working installations continue to launch normally. See [compatibility results](COMPATIBILITY.md) and the [Warcraft runbook](WARCRAFT-III.md).
 
@@ -40,6 +44,7 @@ The page displays setup stages and a **Cancel setup** button. Downloads and extr
 ```sh
 maceti setup amongus
 maceti setup rocket
+maceti setup goldsrc
 maceti setup factorio --bottle-only
 ```
 

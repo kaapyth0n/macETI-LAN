@@ -43,9 +43,11 @@ public enum GameLauncher {
             guard fm.isExecutableFile(atPath: wine.path) else { throw ETIError("The selected CrossOver installation is missing its Wine executable.") }
             let gameDirectory = workingDirectory ?? executable.deletingLastPathComponent()
             // --cx-app searches bottle application names; a Mac path must be positional.
-            // Pass the folder explicitly so CrossOver converts it to the Windows working directory.
+            // CrossOver still accepts Mac executable/workdir paths with --no-convert.
+            // Keep game arguments literal: its default conversion rewrites existing
+            // relative directories (e.g. -game cstrike) and breaks GoldSrc startup.
             return LaunchCommand(executable: wine,
-                                 arguments: ["--bottle", config.bottle, "--workdir", gameDirectory.path, "--", executable.path] + config.arguments,
+                                 arguments: ["--bottle", config.bottle, "--no-convert", "--workdir", gameDirectory.path, "--", executable.path] + config.arguments,
                                  workingDirectory: gameDirectory)
         case .native:
             if executable.pathExtension.lowercased() == "app" {

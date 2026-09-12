@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "contentRevision": "2026-09-12.8",
-  "reviewedAt": "2026-09-12",
+  "contentRevision": "2026-09-13.1",
+  "reviewedAt": "2026-09-13",
   "sources": [
     {"id":"l4d2-overlay","title":"Supplied overlay component: disable-overlay setting","url":"https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/blob/master/Readme_release.txt","context":"Original project README; the setting was also found in the supplied DLL and tested locally."},
     {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
@@ -39,6 +39,53 @@
     "Repeat without WAN access after provisioning. Test Mac hosting separately."
   ],
   "profiles": [
+    {
+      "gameID": "goldsrc",
+      "revision": 1,
+      "reviewedPackageRevision": "20240623",
+      "route": "crossOver",
+      "summary": "Counter-Strike 1.6 from ETI GoldSrc package 20240623 reached its full-screen main menu on Apple M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. Automatic installation reuses an existing macETI-created bottle and fills in the executable, working directory and arguments. Gameplay and Windows LAN joining remain untested.",
+      "setup": [
+        {
+          "title": "Use Set up Counter-Strike 1.6",
+          "detail": "Finish syncing, then choose Set up Counter-Strike 1.6 in Overview or Runtime. The app creates or reuses its dedicated Windows 10 bottle, extracts the package, applies the supplied CS 1.6 launcher settings and saves the complete runtime. When ready, use Launch. No file picker or additional prerequisite installer was needed in the menu test.",
+          "sourceIDs": [
+            "rarlab"
+          ]
+        },
+        {
+          "title": "The GoldSrc package contains several games",
+          "detail": "This automatic recipe selects CS 1.6. It uses GoldSrc/hl-cs16/SmartSteamLoader.exe with that hl-cs16 directory as the working folder and -game cstrike as two separate arguments. The root SmartSteamEmu.ini is copied into hl-cs16 only during fresh extraction, matching the supplied Windows launcher. CS 1.5 and Half-Life have separate entry points and have not been tested by this recipe.",
+          "sourceIDs": []
+        }
+      ],
+      "troubleshooting": [
+        {
+          "title": "An empty bottle is not an installed game",
+          "detail": "If you previously used Create bottle only, use Set up Counter-Strike 1.6 next. The existing macETI-created bottle is reused and all launch fields are filled in. Older app versions only offered bottle creation for this package.",
+          "sourceIDs": []
+        },
+        {
+          "title": "GoldSrc filesystem assertion during launch",
+          "detail": "The first trial crashed because CrossOver converted the relative cstrike argument into an absolute Windows path. macETI now passes --no-convert to CrossOver, keeping game arguments literal while still accepting Mac executable and working-folder paths. This fixed the trial and reached the full-screen CS 1.6 menu. Keep -game and cstrike as separate arguments; no DLL or graphics override was needed.",
+          "sourceIDs": []
+        },
+        {
+          "title": "Close a failed instance before retrying",
+          "detail": "If the game says only one instance can run, close its existing game/error window before relaunching. Menu rendering does not establish gameplay, input, sound or LAN compatibility.",
+          "sourceIDs": []
+        }
+      ],
+      "lanChecklist": [
+        "Select Counter-Strike 1.6 on the Windows host too; this package also includes CS 1.5 and Half-Life.",
+        "Compare engine builds and network protocol, then join a waiting LAN server with the same map.",
+        "Complete a round and test input, sound, reconnecting and map changes."
+      ],
+      "sourceIDs": [
+        "cx26",
+        "rarlab"
+      ]
+    },
     {
       "gameID":"amongus","revision":4,"reviewedPackageRevision":"20250308","route":"crossOver",
       "summary":"User-confirmed working LAN play with the Windows group on M2 Pro, macOS 15.7.9 and CrossOver 26.3.0. ETI package 20250308 contains v2024.11.26s (build 4936). The agent separately verified Skeld practice rendering and keyboard movement. The successful LAN result is user-reported; reconnecting, Mac hosting and operation without WAN remain untested.",

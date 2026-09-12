@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.0 — Counter-Strike 1.6 setup
+
+- Add **Set up Counter-Strike 1.6** for GoldSrc package `20240623`: reuse an existing macETI bottle or create one, extract the package and fill in all launch fields.
+- Select the CS 1.6 entry point from the multi-game archive and apply the supplied launcher configuration in the installed copy.
+- Keep CrossOver launch arguments literal with `--no-convert`, fixing a GoldSrc filesystem assertion caused by rewriting `cstrike` as an absolute path.
+- Make full installation the primary action for supported packages. Explain that bottle creation alone does not install a game when automatic installation is unavailable.
+- Record the observed full-screen CS 1.6 menu; gameplay and Windows LAN joining remain untested.
+
 ## 0.5.0 — Game removal
 
 - Add **Remove game…** to every game page. Review folder paths and estimated sizes, then move the installed copy, synced download, or both to Trash.
@@ -38,4 +46,4 @@
 - Original app icon, packaged CLI, setup helpers and release checksums.
 - Public build/contribution documentation and macOS CI.
 
-Game installation and Mac–Windows LAN compatibility remain experimental. See the compatibility notes for individual observations; automatic package recipes currently cover Among Us and Rocket League only.
+Game installation and Mac–Windows LAN compatibility remain experimental. See the compatibility notes for individual observations; automatic package recipes currently cover Among Us, Rocket League and CS 1.6/GoldSrc.
