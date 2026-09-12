@@ -1,0 +1,7 @@
+# App icon
+
+`AppIcon.png` is the original raster master, generated with OpenAI's built-in image-generation tool for this project. `scripts/build-icon.sh` uses macOS `sips` and `iconutil` to produce standard 16–1024 pixel representations in the packaged `AppIcon.icns`. Generated iconsets and `.icns` build output are not committed.
+
+Generation prompt:
+
+> Use case: logo-brand. Asset type: production macOS app icon for macETI-LAN, an independent Apple Silicon LAN game library and launcher. Create one original polished app icon at 1024 x 1024, square canvas. A rounded-square charcoal graphite tile, filling approximately 88 percent of the canvas, isolated on truly transparent outer corners. Center a bold warm brushed-gold game controller silhouette, beautifully simple and legible at tiny Dock sizes. Integrate a small LAN connection motif into its lower silhouette: one short vertical line branching into two endpoints, no wires cluttering the controller. The controller has a dark cross-shaped directional pad and two dark circular buttons. Subtle tasteful metallic depth and a warm gold rim highlight, quiet premium native macOS design matching a black and muted gold app interface. Front view, centered, clean edges, strong contrast. No text, letters, numbers, Apple logo, ETI logo, watermark, photoreal desk scene or mockup. This is the actual icon asset, not a presentation sheet. Keep the emblem substantial and geometric; generous negative space between emblem and tile edge.

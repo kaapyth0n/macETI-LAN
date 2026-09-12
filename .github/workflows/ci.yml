@@ -1,0 +1,35 @@
+name: macOS build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Check publication contents
+        run: python3 scripts/check-publication.py
+      - name: Test
+        run: swift test
+      - name: Package app and checksum
+        run: bash scripts/package-release.sh
+      - name: Check bundled CLI
+        run: dist/macETI-LAN.app/Contents/MacOS/maceti help
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: macETI-LAN-preview
+          path: |
+            dist/*.zip
+            dist/*.sha256
+          if-no-files-found: error
+          retention-days: 7

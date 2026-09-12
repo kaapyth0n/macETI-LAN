@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "contentRevision": "2026-09-12.1",
+  "reviewedAt": "2026-09-12",
+  "sources": [
+    {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
+    {"id":"cx26","title":"CrossOver 26: advanced settings","url":"https://support.codeweavers.com/en_US/advanced-settings-in-crossover-mac-26","context":"Official Mac documentation · CrossOver 26 and later · updated February 2026"},
+    {"id":"crosstie","title":"CrossTie installation profiles","url":"https://support.codeweavers.com/en_US/an-intermediate-guide-on-what-the-crosstie-editor-options-mean","context":"Official recipe documentation · installation and dependency mechanisms, not an M2 game test"},
+    {"id":"amongus","title":"Among Us: CrossOver reports","url":"https://www.codeweavers.com/compatibility/crossover/among-us","context":"Community compatibility evidence · confirm the Mac platform, runtime version and game build"},
+    {"id":"innersloth","title":"Among Us: official game information","url":"https://www.innersloth.com/games/among-us/","context":"Publisher · local Wi-Fi and cross-platform play; ETI interoperability is untested"},
+    {"id":"l4d2","title":"Left 4 Dead 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/left-4-dead-2","context":"Historical community tips · mostly 2009–2010 · some Linux-specific"},
+    {"id":"flat2","title":"FlatOut 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/flatout-2","context":"Historical community tips · 2009 · includes Linux audio advice"},
+    {"id":"cod2","title":"Call of Duty 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/call-of-duty-2","context":"Historical community tip · intro-movie hang · August 2009"},
+    {"id":"cod2-reports","title":"Call of Duty 2: CrossOver reports","url":"https://www.codeweavers.com/compatibility/crossover/call-of-duty-2","context":"Check Mac results separately; a working ETI setup has not been established"},
+    {"id":"ioq3","title":"ioquake3: official Mac downloads","url":"https://ioquake3.org/get-it/","context":"Official engine project · Universal 2 build for Intel and Apple Silicon"},
+    {"id":"ioq3-guide","title":"ioquake3: player's guide","url":"https://ioquake3.org/help/players-guide/","context":"Official engine setup and game-data guidance"}
+  ],
+  "crossOverSetup": [
+    {"title":"Start with Graphics: Auto on CrossOver 26+","detail":"Auto selects a backend using CrossOver's per-game database and falls back to Wine when there is no entry. This is our baseline for a trial, not a tested preset for this ETI package.","sourceIDs":["cx26"]},
+    {"title":"Use a dedicated bottle when changing settings","detail":"Our recommendation is one bottle per game that needs custom settings. Explicit graphics selections affect every application in the bottle. Record the bottle's Windows version and any changes in your test notes.","sourceIDs":["cx26"]},
+    {"title":"Check dependencies against the actual package","detail":"CrossTie recipes can install prerequisites and configure a bottle. A Steam or retail recipe may expect an installer that differs from ETI's synced files. Inspect the local package before choosing a recipe; automatic dependency setup is not available here yet.","sourceIDs":["crosstie"]},
+    {"title":"Change one setting at a time","detail":"During a trial, record graphics and MSync settings, then compare the same scene. CodeWeavers notes that MSync and High Resolution Mode do not benefit every application. Keep writable game settings and saves in the local installation.","sourceIDs":["cx26"]}
+  ],
+  "nativeSetup": [
+    {"title":"Prepare the Mac engine and game data","detail":"Use the port's own setup instructions, then select the installed Mac executable or app in Runtime. Keep writable settings outside the read-only Resilio package. A native runtime selection alone does not prove Windows LAN compatibility.","sourceIDs":[]}
+  ],
+  "troubleshooting": [
+    {"title":"Check the platform and date of a workaround","detail":"Confirm the exact game edition, macOS and CrossOver version before trying community advice. Historical Linux fixes and reports from Intel Macs are investigation leads, not Apple Silicon presets.","sourceIDs":["compatibility-center"]},
+    {"title":"Compare builds when LAN joining fails","detail":"For an ETI trial, record the game versions on both machines, package revision, maps and mods. ETI's package date is not the game's network protocol version. Test direct connection as well as lobby discovery where the game supports it.","sourceIDs":[]}
+  ],
+  "lanChecklist": [
+    "Record the Windows host's game version and the Mac client's version.",
+    "Join the Windows host and complete a match or level, then reconnect.",
+    "Repeat without WAN access after provisioning. Test Mac hosting separately."
+  ],
+  "profiles": [
+    {
+      "gameID":"amongus","revision":1,"reviewedPackageRevision":"20250308","route":"crossOver",
+      "summary":"Start by testing the matching Windows build in CrossOver. Local Wi-Fi play is documented by the publisher, but this ETI package has not been tested on our Mac.",
+      "setup":[{"title":"Match the participants' game versions","detail":"Our first trial should use the same Windows package as the other ETI players. Confirm the actual version in the game; a current store release may differ from this package.","sourceIDs":["amongus","innersloth"]}],
+      "troubleshooting":[{"title":"Separate lobby, account and input problems","detail":"Record whether failure happens at startup, entering Local, joining a lobby or starting a round. Test keyboard/mouse controls and discussion/voting separately. Keep a native alternative as a separate runtime experiment.","sourceIDs":[]}],
+      "lanChecklist":["Join a Windows-hosted Local lobby with the same game version.","Complete a round, including discussion and voting, then rejoin.","Repeat with WAN disconnected after provisioning; record account and chat requirements."],
+      "sourceIDs":["amongus","innersloth"]
+    },
+    {
+      "gameID":"l4d2","revision":1,"reviewedPackageRevision":"20201021","route":"crossOver",
+      "summary":"This profile covers Left 4 Dead 2. Start with a dedicated CrossOver trial using the ETI Windows build; gameplay and co-op remain untested here.",
+      "setup":[{"title":"Keep this edition separate from Left 4 Dead 1","detail":"Check the installed game's version and content against the Windows host. Select the prepared local executable in Runtime and record any package-specific launch arguments.","sourceIDs":[]}],
+      "troubleshooting":[{"title":"Old performance tips need revalidation","detail":"The linked tips are mostly from 2009–2010 and include Linux audio fixes. Do not treat old memory, GLSL or launch-argument tweaks as current M2 defaults. Start from the current CrossOver baseline.","sourceIDs":["l4d2","cx26"]}],
+      "lanChecklist":["Join a Windows-hosted local co-op campaign with matching content.","Test input, sound, a level transition and reconnecting.","Repeat without WAN access after provisioning. Validate Mac hosting in a separate trial."],
+      "sourceIDs":["l4d2"]
+    },
+    {
+      "gameID":"flat2","revision":1,"reviewedPackageRevision":"20160922","route":"crossOver",
+      "summary":"Test the 2006 FlatOut 2 Windows package in CrossOver first. This is a different game from Ultimate Carnage; Mac-to-Windows LAN play is not yet verified.",
+      "setup":[{"title":"Keep the Windows build aligned","detail":"Prepare a local copy of the ETI package and record its actual game version. Treat a Mac release as a separate experiment until it can join the same Windows lobby.","sourceIDs":[]}],
+      "troubleshooting":[{"title":"A missing DLL is a dependency clue","detail":"A 2009 tip mentions d3dx9_30.dll. If that exact error occurs, investigate the package's DirectX prerequisites and an official runtime installer. No DLL download or override has been validated for this profile.","sourceIDs":["flat2"]},{"title":"Skip Linux-only audio fixes on macOS","detail":"The historical tips include PulseAudio/ALSA advice, which is for Linux. It does not establish a macOS startup fix.","sourceIDs":["flat2"]}],
+      "lanChecklist":["Join the Windows ETI LAN lobby with matching builds.","Complete a race and a destruction derby; change tracks and reconnect.","Check input/controller behavior and repeat without WAN access after provisioning."],
+      "sourceIDs":["flat2"]
+    },
+    {
+      "gameID":"cod2","revision":1,"reviewedPackageRevision":"20160922","route":"crossOver",
+      "summary":"Experimental target: a working CrossOver setup for this ETI package has not been established. Verify multiplayer startup before investing in a full setup recipe.",
+      "setup":[{"title":"Test the multiplayer executable explicitly","detail":"Identify the local multiplayer executable from the package and configure that entry for the LAN trial. Record single-player and multiplayer results separately if they behave differently.","sourceIDs":[]}],
+      "troubleshooting":[{"title":"Intro-movie advice is historical","detail":"CodeWeavers lists a 2009 intro-movie hang workaround. It is not an M2-tested fix and should only be investigated if the observed failure matches. Read the current Mac compatibility reports before choosing further changes.","sourceIDs":["cod2","cod2-reports"]}],
+      "lanChecklist":["Reach the multiplayer menu and record the actual game version.","Join a known Windows ETI server and complete a map, then reconnect.","Record input/audio issues and repeat without WAN access after provisioning."],
+      "sourceIDs":["cod2","cod2-reports"]
+    },
+    {
+      "gameID":"quake3","revision":1,"reviewedPackageRevision":"20160922","route":"native",
+      "summary":"Our first native-port experiment uses ioquake3's Universal 2 build. Apple Silicon engine availability is established; compatibility with the ETI Windows server still needs testing.",
+      "setup":[{"title":"Use the official Universal 2 build","detail":"Follow ioquake3's Mac download and player's guide to provide the required Quake III data. Then select the installed native executable or app in Runtime. The engine and game data are separate components.","sourceIDs":["ioq3","ioq3-guide"]},{"title":"Record the server protocol, maps and mods","detail":"Compare the ETI Windows server's actual build with the selected engine. Begin with matching base-game content, then test the event's mods separately. No protocol override is applied by this guide.","sourceIDs":[]}],
+      "troubleshooting":[{"title":"Keep native and CrossOver trials separate","detail":"These setup notes target ioquake3. If you switch Runtime to CrossOver, the saved choice is respected, but the native guide does not become a Windows recipe.","sourceIDs":[]}],
+      "lanChecklist":["Load the intended game data in the Apple Silicon engine.","Discover or directly connect to the Windows ETI host; complete a match.","Change maps, reconnect and test required mods. Repeat without WAN access after provisioning."],
+      "sourceIDs":["ioq3","ioq3-guide"]
+    }
+  ]
+}
