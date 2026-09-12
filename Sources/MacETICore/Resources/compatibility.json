@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentRevision": "2026-09-12.1",
+  "contentRevision": "2026-09-12.2",
   "reviewedAt": "2026-09-12",
   "sources": [
     {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
@@ -10,6 +10,7 @@
     {"id":"innersloth","title":"Among Us: official game information","url":"https://www.innersloth.com/games/among-us/","context":"Publisher · local Wi-Fi and cross-platform play; ETI interoperability is untested"},
     {"id":"l4d2","title":"Left 4 Dead 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/left-4-dead-2","context":"Historical community tips · mostly 2009–2010 · some Linux-specific"},
     {"id":"flat2","title":"FlatOut 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/flatout-2","context":"Historical community tips · 2009 · includes Linux audio advice"},
+    {"id":"flat2-manual","title":"FlatOut 2: official PC manual","url":"https://cdn.cloudflare.steamstatic.com/steam/apps/2990/manuals/manual_en.pdf","context":"Publisher manual · separate configuration program controls resolution and colour depth"},
     {"id":"cod2","title":"Call of Duty 2: CrossOver tips","url":"https://www.codeweavers.com/compatibility/crossover/tips/call-of-duty-2","context":"Historical community tip · intro-movie hang · August 2009"},
     {"id":"cod2-reports","title":"Call of Duty 2: CrossOver reports","url":"https://www.codeweavers.com/compatibility/crossover/call-of-duty-2","context":"Check Mac results separately; a working ETI setup has not been established"},
     {"id":"ioq3","title":"ioquake3: official Mac downloads","url":"https://ioquake3.org/get-it/","context":"Official engine project · Universal 2 build for Intel and Apple Silicon"},
@@ -51,10 +52,10 @@
       "sourceIDs":["l4d2"]
     },
     {
-      "gameID":"flat2","revision":1,"reviewedPackageRevision":"20160922","route":"crossOver",
+      "gameID":"flat2","revision":2,"reviewedPackageRevision":"20160922","route":"crossOver",
       "summary":"Test the 2006 FlatOut 2 Windows package in CrossOver first. This is a different game from Ultimate Carnage; Mac-to-Windows LAN play is not yet verified.",
       "setup":[{"title":"Keep the Windows build aligned","detail":"Prepare a local copy of the ETI package and record its actual game version. Treat a Mac release as a separate experiment until it can join the same Windows lobby.","sourceIDs":[]}],
-      "troubleshooting":[{"title":"A missing DLL is a dependency clue","detail":"A 2009 tip mentions d3dx9_30.dll. If that exact error occurs, investigate the package's DirectX prerequisites and an official runtime installer. No DLL download or override has been validated for this profile.","sourceIDs":["flat2"]},{"title":"Skip Linux-only audio fixes on macOS","detail":"The historical tips include PulseAudio/ALSA advice, which is for Linux. It does not establish a macOS startup fix.","sourceIDs":["flat2"]}],
+      "troubleshooting":[{"title":"Change resolution in the separate graphics setup","detail":"Close the game. In Runtime, temporarily add -setup as an argument, save, then launch. In the configuration window, choose Display Mode with 32-bit colour and a matching Aspect Ratio, then click OK. Remove -setup from Runtime, save and launch normally. This was verified with ETI package 20160922 (game v1.2), CrossOver 26.3.0 and an M2 Pro on macOS 15.7.9.","sourceIDs":["flat2-manual"]},{"title":"If the game stays in a small window","detail":"A low game resolution or a forced Wine virtual desktop can cause this. In the FlatOut 2 bottle, disable Emulate a virtual desktop if it was enabled, then reopen graphics setup and choose a supported screen resolution. Our local test reached the full-screen profile menu at 1512×945, 32-bit colour, 16:10, with Graphics Auto and High Resolution Mode off. Pick a mode suited to your own display; this startup check does not verify Windows LAN play.","sourceIDs":[]},{"title":"A missing DLL is a dependency clue","detail":"A 2009 tip mentions d3dx9_30.dll. If that exact error occurs, investigate the package's DirectX prerequisites and an official runtime installer. No individual DLL download or override has been validated for this profile.","sourceIDs":["flat2"]},{"title":"Skip Linux-only audio fixes on macOS","detail":"The historical tips include PulseAudio/ALSA advice, which is for Linux. It does not establish a macOS startup fix.","sourceIDs":["flat2"]}],
       "lanChecklist":["Join the Windows ETI LAN lobby with matching builds.","Complete a race and a destruction derby; change tracks and reconnect.","Check input/controller behavior and repeat without WAN access after provisioning."],
       "sourceIDs":["flat2"]
     },
