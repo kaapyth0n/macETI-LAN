@@ -55,7 +55,7 @@ public struct GameProfile: Identifiable, Sendable {
     public let note: String
     public static let selected: [GameProfile] = [
         .init(id: "quake3", title: "Quake III Arena", runtime: "Native · ioquake3",
-              note: "First native target. Verify the Windows server protocol, maps and mods."),
+              note: "Native ARM64 gameplay and Windows 1.32 LAN joining observed. Other builds and mods need separate checks."),
         .init(id: "amongus", title: "Among Us", runtime: "CrossOver",
               note: "Match the Windows version before testing a local lobby."),
         .init(id: "l4d2", title: "Left 4 Dead 2", runtime: "CrossOver",

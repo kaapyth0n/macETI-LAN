@@ -10,8 +10,8 @@ import subprocess
 import sys
 
 DENIED_PARTS = {'.build', '.swiftpm', '.local', 'dist', '.sync', 'Artwork', 'Runtimes', 'Setup', '__pycache__', 'xcuserdata'}
-DENIED_NAMES = {'library.json', 'compatibility-tests.json', 'catalog-receipt.json', 'bootstrap-receipt.json', '.DS_Store'}
-DENIED_SUFFIXES = {'.db', '.key', '.w3k', '.w3g', '.w3z', '.w3x', '.w3m', '.w3n', '.rsls', '.exe', '.dll', '.zip', '.dmg', '.tar', '.eti', '.pem', '.p12', '.log', '.pyc', '.icns'}
+DENIED_NAMES = {'q3key', 'qkey', 'q3config.cfg', 'library.json', 'compatibility-tests.json', 'catalog-receipt.json', 'bootstrap-receipt.json', '.DS_Store'}
+DENIED_SUFFIXES = {'.db', '.key', '.pk3', '.w3k', '.w3g', '.w3z', '.w3x', '.w3m', '.w3n', '.rsls', '.exe', '.dll', '.zip', '.dmg', '.tar', '.eti', '.pem', '.p12', '.log', '.pyc', '.icns'}
 PATTERNS = {
     'literal Resilio-style key': re.compile(rb'(?<![A-Z2-7])[AB][A-Z2-7]{32}(?![A-Z2-7])'),
     'GitHub token': re.compile(rb'(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,})'),
@@ -29,7 +29,7 @@ def main():
     for name in filter(None, names):
         path = PurePosixPath(name)
         if (set(path.parts) & DENIED_PARTS or path.name in DENIED_NAMES or path.suffix.lower() in DENIED_SUFFIXES
-                or '.sqlite' in path.name or path.name == '.env' or path.name.startswith('.env.')
+                or re.search(r'\.dm_\d+$', path.name, re.I) or '.sqlite' in path.name or path.name == '.env' or path.name.startswith('.env.')
                 or any(part.endswith('.app') or part.endswith('.iconset') for part in path.parts)):
             issues.append((name, 'private/generated payload'))
         # Read the index, not a potentially different working-tree copy.

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contentRevision": "2026-09-12.6",
+  "contentRevision": "2026-09-12.7",
   "reviewedAt": "2026-09-12",
   "sources": [
     {"id":"compatibility-center","title":"CodeWeavers Compatibility Center","url":"https://www.codeweavers.com/compatibility/","context":"Look up the exact edition; distinguish Mac reports from Linux reports."},
@@ -79,12 +79,56 @@
       "sourceIDs":["wc3-opengl","rarlab"]
     },
     {
-      "gameID":"quake3","revision":1,"reviewedPackageRevision":"20160922","route":"native",
-      "summary":"Our first native-port experiment uses ioquake3's Universal 2 build. Apple Silicon engine availability is established; compatibility with the ETI Windows server still needs testing.",
-      "setup":[{"title":"Use the official Universal 2 build","detail":"Follow ioquake3's Mac download and player's guide to provide the required Quake III data. Then select the installed native executable or app in Runtime. The engine and game data are separate components.","sourceIDs":["ioq3","ioq3-guide"]},{"title":"Record the server protocol, maps and mods","detail":"Compare the ETI Windows server's actual build with the selected engine. Begin with matching base-game content, then test the event's mods separately. No protocol override is applied by this guide.","sourceIDs":[]}],
-      "troubleshooting":[{"title":"Keep native and CrossOver trials separate","detail":"These setup notes target ioquake3. If you switch Runtime to CrossOver, the saved choice is respected, but the native guide does not become a Windows recipe.","sourceIDs":[]}],
-      "lanChecklist":["Load the intended game data in the Apple Silicon engine.","Discover or directly connect to the Windows ETI host; complete a match.","Change maps, reconnect and test required mods. Repeat without WAN access after provisioning."],
-      "sourceIDs":["ioq3","ioq3-guide"]
+      "gameID": "quake3",
+      "revision": 2,
+      "reviewedPackageRevision": "20160922",
+      "route": "native",
+      "summary": "Native ARM64 ioquake3 was tested on M2 Pro and macOS 15.7.9 using ETI package 20160922. A local q3dm1 match rendered and keyboard movement worked. The native client then joined a live Windows Quake III 1.32 server on Q3DM12 using protocol 68, with the map and HUD rendered full-screen. A completed LAN round, reconnecting and map changes remain untested.",
+      "setup": [
+        {
+          "title": "Use the tested native engine with the synced data",
+          "detail": "The official notarized Universal 2 download contains ioq3 1.36_GIT_96db7a06-2021-07-19, built for macOS ARM64 on 12 September 2021. macOS accepted its Notarized Developer ID signature. Extract baseq3/pak0.pk3 through pak8.pk3 from quake3.eti into a writable local runtime folder alongside ioquake3.app. Keep the app bundle intact. No CrossOver bottle or Windows DLLs are needed for this tested base-game setup.",
+          "sourceIDs": [
+            "ioq3",
+            "ioq3-guide"
+          ]
+        },
+        {
+          "title": "Keep native settings separate",
+          "detail": "Select ioquake3.app/Contents/MacOS/ioquake3 as the native executable and its containing runtime root as the working folder. Pass +set, fs_basepath, the runtime root, +set, fs_homepath and a separate UserData folder as six individual arguments. The trial copied only the nine PK3 files and started fresh settings, without importing the synced Windows q3config.cfg.",
+          "sourceIDs": [
+            "ioq3-guide"
+          ]
+        },
+        {
+          "title": "Use full-screen desktop resolution",
+          "detail": "The verified full-screen setting is r_fullscreen 1 with r_mode -2; the engine chose 1512×982 on the test Mac. A 1280×800 window also rendered correctly. The OpenGL2 renderer initialized OpenGL 4.1 on Apple M2 Pro. Display preferences stay in the private UserData configuration, so the launcher does not force them on every start.",
+          "sourceIDs": []
+        }
+      ],
+      "troubleshooting": [
+        {
+          "title": "Match the server protocol and content",
+          "detail": "The tested Windows server reported Q3 1.32 win-x86 Oct 7 2002, protocol 68, sv_pure=1 and PunkBuster off. Native joining succeeded with the same nine PK3 files. Different mods, older protocols, Team Arena and PunkBuster-enabled servers require separate testing; CrossOver remains a fallback for incompatible Windows-specific content.",
+          "sourceIDs": [
+            "ioq3-guide"
+          ]
+        },
+        {
+          "title": "Exit from the game menu",
+          "detail": "Stopping the test process with SIGTERM caused an Abnormal Exit / safe-video prompt on its next start, despite the prior session rendering correctly. Use Exit in the game for normal shutdown. Do not interpret that prompt alone as a graphics incompatibility.",
+          "sourceIDs": []
+        }
+      ],
+      "lanChecklist": [
+        "Join the matching Windows 1.32 server and complete a round.",
+        "Test a map change, reconnect and any event-specific mods separately.",
+        "Test Mac hosting and operation without WAN after provisioning."
+      ],
+      "sourceIDs": [
+        "ioq3",
+        "ioq3-guide"
+      ]
     },
     {
       "gameID": "rocket",

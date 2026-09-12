@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Document native ARM64 Quake III setup, verified local rendering/movement and joining a Windows 1.32 LAN server in full-screen mode.
+- Exclude Quake game-data archives, keys, configuration and demos from source publication.
+
 ## 0.4.0 — Automatic CrossOver setup
 
 - Create and save a dedicated Windows 10 64-bit bottle from any Windows game page.

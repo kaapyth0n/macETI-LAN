@@ -14,9 +14,9 @@ A native macOS companion for the [ETI-LAN](https://www.eti-lan.xyz/?lang=en) gam
 
 - Browse the imported ETI catalog with covers, search, genre filters, grid/list views and sorting. The initial release was checked with a 214-game catalog.
 - Save any title to **My games** and set up its individual read-only Resilio share.
-- Create a CrossOver bottle from the game page, automatically prepare supported synced packages, or choose an existing bottle/native Mac app. Quake III defaults to the planned ioquake3 route; other games default to CrossOver.
+- Create a CrossOver bottle from the game page, automatically prepare supported synced packages, or choose an existing bottle/native Mac app. Quake III defaults to the tested native ioquake3 route; other games default to CrossOver.
 - Launch a prepared local game installation with its saved arguments and working folder.
-- Read dated setup guidance, troubleshooting and Windows LAN checklists. Among Us, Left 4 Dead 2, FlatOut 2, Call of Duty 2, Quake III classic Warcraft III and Rocket League have dedicated guidance; other entries get general advice.
+- Read dated setup guidance, troubleshooting and Windows LAN checklists. Among Us, Left 4 Dead 2, FlatOut 2, Call of Duty 2, Quake III, classic Warcraft III and Rocket League have dedicated guidance; other entries get general advice.
 - Record gameplay and Windows LAN results separately, alongside package/runtime versions and the test environment.
 
 **The launcher is usable; game compatibility is still experimental.** No bundled profile certifies an ETI game or Mac–Windows multiplayer session. Resilio owns transfers and progress. Connecting a share requires its desktop app. Automatic setup covers the tested Among Us and Rocket League package revisions; other Windows games have bottle creation plus manual installation guidance. CrossOver itself must already be installed and activated.
@@ -62,7 +62,7 @@ bash scripts/package-release.sh
 
 **Compatibility:** consult the sourced guidance and record an actual test. A successful launch does not establish LAN compatibility. The page distinguishes reaching a menu, gameplay, joining a Windows host and completing a LAN session. Historical results are flagged when the package or saved runtime configuration changes.
 
-The [Warcraft III setup notes](docs/WARCRAFT-III.md) cover the tested Frozen Throne build, OpenGL fix for black terrain, full-screen setup and Bonjour discovery. FlatOut 2's in-app guide includes the verified resolution setup. Among Us and the older synced Rocket League build have user-confirmed LAN play with the Windows group using CrossOver 26.3.0. See the [observed results](docs/COMPATIBILITY.md#observed-game-results) for the tested builds, settings and limits.
+The [Warcraft III setup notes](docs/WARCRAFT-III.md) cover the tested Frozen Throne build, OpenGL fix for black terrain, full-screen setup and Bonjour discovery. FlatOut 2's in-app guide includes the verified resolution setup. Among Us and the older synced Rocket League build have user-confirmed LAN play with the Windows group using CrossOver 26.3.0. Quake III also joined a Windows 1.32 LAN server using native ARM64 ioquake3; see the [native setup notes](docs/QUAKE-III.md). See the [observed results](docs/COMPATIBILITY.md#observed-game-results) for the tested builds, settings and limits.
 
 ![Compatibility guidance](docs/compatibility-preview.jpg)
 

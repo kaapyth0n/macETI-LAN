@@ -1,6 +1,6 @@
 # Compatibility guidance — 12 September 2026
 
-The launcher provides sourced guidance on every game page, versioned profiles for seven games, and private recording of manual test results. The source includes manual setup notes from actual FlatOut 2, Warcraft III, Among Us and Rocket League trials. Version 0.4.0 adds bottle creation for Windows games and automatic extraction/launch setup for the exact Among Us and Rocket League packages; see [automatic setup](SETUP.md). It does not install extra prerequisites or execute CrossTies.
+The launcher provides sourced guidance on every game page, versioned profiles for seven games, and private recording of manual test results. The source includes manual setup notes from actual FlatOut 2, Warcraft III, Among Us, Rocket League and native Quake III trials. Version 0.4.0 adds bottle creation for Windows games and automatic extraction/launch setup for the exact Among Us and Rocket League packages; see [automatic setup](SETUP.md). It does not install extra prerequisites or execute CrossTies.
 
 ## User flow
 
@@ -12,7 +12,7 @@ The latest recorded result displays its environment and date. If the catalog pac
 
 ## Profile content
 
-`Sources/MacETICore/Resources/compatibility.json` has schema version 1 and content revision `2026-09-12.6`. It contains shared setup notes, source metadata and seven profiles:
+`Sources/MacETICore/Resources/compatibility.json` has schema version 1 and content revision `2026-09-12.7`. It contains shared setup notes, source metadata and seven profiles:
 
 | ETI ID | Route | Catalog package at research time |
 | --- | --- | --- |
@@ -20,11 +20,11 @@ The latest recorded result displays its environment and date. If the catalog pac
 | `l4d2` | CrossOver | `20201021` |
 | `flat2` | CrossOver | `20160922` |
 | `cod2` | CrossOver, experimental | `20160922` |
-| `quake3` | Native ioquake3 experiment | `20160922` |
+| `quake3` | Native ioquake3, observed Windows LAN joining | `20160922` |
 | `wc3` | CrossOver, built-in OpenGL renderer | `20260308` |
 | `rocket` | CrossOver, supplied package launcher | `20260410` |
 
-These package revisions came from the live catalog. FlatOut 2, Warcraft III, Among Us and Rocket League packages were subsequently synced, inspected and tested as described below. The other entries remain research profiles. The page warns when a catalog revision changes. A curated route never overrides the user's saved runtime. Other games get shared guidance for their chosen runtime and an explicit unresearched status.
+These package revisions came from the live catalog. FlatOut 2, Warcraft III, Among Us, Rocket League and Quake III packages were subsequently synced, inspected and tested as described below. The other entries remain research profiles. The page warns when a catalog revision changes. A curated route never overrides the user's saved runtime. Other games get shared guidance for their chosen runtime and an explicit unresearched status.
 
 The sources include [CrossOver 26 advanced settings](https://support.codeweavers.com/en_US/advanced-settings-in-crossover-mac-26), [CrossTie profile documentation](https://support.codeweavers.com/en_US/an-intermediate-guide-on-what-the-crosstie-editor-options-mean), CodeWeavers game-specific tips, [Innersloth](https://www.innersloth.com/games/among-us/) and [ioquake3](https://ioquake3.org/get-it/). Game-specific URLs and historical dates are retained in the JSON. Dynamic ratings are linked rather than presented as continuously current data.
 
@@ -32,7 +32,7 @@ Graphics Auto is a trial baseline for CrossOver 26+, with the tested game-specif
 
 ## Observed game results
 
-Trials on 12 September 2026 used Apple M2 Pro, macOS 15.7.9 and CrossOver 26.3.0 (26.3.0.39832), with dedicated Windows 10 64-bit bottles, Graphics Auto and High Resolution Mode off.
+Trials on 12 September 2026 used Apple M2 Pro and macOS 15.7.9. Windows games used CrossOver 26.3.0 (26.3.0.39832), with dedicated Windows 10 64-bit bottles, Graphics Auto and High Resolution Mode off. Quake III used native ARM64 ioquake3.
 
 | Game/build | Observed result | Still to verify |
 | --- | --- | --- |
@@ -40,9 +40,10 @@ Trials on 12 September 2026 used Apple M2 Pro, macOS 15.7.9 and CrossOver 26.3.0
 | Warcraft III 1.30.4.11274, package `20260308` | User confirmed joining a Windows LAN match, but its 3D world was black. After adding `-opengl`, the agent verified terrain, models, portrait and movement in a short local run of the same custom map, both windowed and using macOS full-screen. The LAN browser showed waiting lobbies after the fix. | Joining and completing a LAN round with the final OpenGL configuration, map changes, reconnect, Mac hosting and operation without WAN. |
 | Among Us v2024.11.26s (build 4936), package `20250308` | **User confirmed working LAN play with the Windows group.** The agent separately verified Skeld practice rendering and keyboard movement. Launched without extra dependencies or arguments; Local was accessible after dismissing `SteamworksAuthFail`. | Reconnecting, Mac hosting and operation without WAN. Tasks, discussion, voting and completed-round coverage were not individually recorded in the user's report. |
 | Rocket League build 180407.56364.190397, package `20260410` | **User confirmed working LAN play.** The agent observed the rendered main menu and a live LAN arena/team selection. The 32-bit Direct3D 9 build ran through the supplied `SmartSteamLoader.exe`, with the game root as working directory, no arguments and no extra dependency installers. | A completed match, arena changes, reconnecting, Mac hosting and operation without WAN. Current store online play is a separate experiment. |
-| Left 4 Dead 2, Call of Duty 2, Quake III | Research guidance only at this revision. | Package-specific gameplay and Windows interoperability. |
+| Quake III Arena 1.32 data, package `20160922`; ioq3 1.36/96db7a06 ARM64 | Agent verified local q3dm1 rendering and keyboard movement, then joined a live Windows Q3 1.32 server on Q3DM12. Protocol 68, pure server on, PunkBuster off. World/HUD rendered full-screen at 1512×982 with the OpenGL2 renderer. | Completed round, reconnect, map changes, mods, Mac hosting and operation without WAN. |
+| Left 4 Dead 2, Call of Duty 2 | Research guidance only at this revision. | Package-specific gameplay and Windows interoperability. |
 
-The [Warcraft III runbook](WARCRAFT-III.md) records extraction, supplied setup helpers, expansion selection, resolution and Bonjour details. Private logs, screenshots with player identities, license material and test history stay outside the repository. No complete LAN round is certified by these observations.
+The [Warcraft III runbook](WARCRAFT-III.md) records extraction, supplied setup helpers, expansion selection, resolution and Bonjour details. Private logs, screenshots with player identities, license material and test history stay outside the repository. The [Quake III native runbook](QUAKE-III.md) records the ARM64 setup and Windows server test. No complete LAN round is certified by these observations.
 
 For Among Us, the tested dedicated bottle used a writable `C:\AmongUs` installation, `Among Us.exe`, its containing directory as the working folder, and no arguments. The archive was 445,998,660 bytes; UnRAR 7.23 extracted 110 files with successful CRC checks. The 32-bit Unity 2020.3.45f1 player reported Direct3D 11.0, feature level 11.1, on Apple M2 Pro. Mouse+Keyboard was already selected. No graphics override or additional runtime installer was needed for the short practice test.
 

@@ -34,3 +34,10 @@ Artwork/
 Runtimes/
 Setup/
 xcuserdata/
+
+# Quake game data and private engine state
+*.pk3
+*.dm_??
+q3key
+qkey
+q3config.cfg
