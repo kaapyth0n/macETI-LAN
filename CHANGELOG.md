@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1 — Warcraft launch regression
+
+- Restrict the CS 1.6 argument-conversion workaround to the GoldSrc launcher. Other games retain their previously tested CrossOver launch behavior.
+- Preserve Warcraft III’s saved `-window -opengl` graphics fix and add regression coverage alongside the GoldSrc argument test.
+
 ## 0.6.0 — Counter-Strike 1.6 setup
 
 - Add **Set up Counter-Strike 1.6** for GoldSrc package `20240623`: reuse an existing macETI bottle or create one, extract the package and fill in all launch fields.

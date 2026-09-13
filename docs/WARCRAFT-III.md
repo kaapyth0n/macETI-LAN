@@ -68,3 +68,9 @@ The expected service state is `RUNNING`. This proves that the service is running
 The user successfully joined a Windows LAN match before the graphics fix. The subsequent OpenGL test verified a short **local** run of the affected map, including selection and movement, in windowed and macOS full-screen modes. The LAN browser displayed waiting lobbies afterward. These are separate observations: an entire LAN round with OpenGL, map changes, reconnecting, Mac hosting and offline operation remain unverified.
 
 Keep license files, synced packages, maps, replays, private test records and identifiable LAN screenshots out of public reports. The repository ignores Warcraft data extensions and its publication check rejects them even if forcibly staged. Report versions, settings, symptoms and the exact extent of the test instead.
+
+## macETI-LAN 0.6.1 launch correction
+
+Version 0.6.0 applied the GoldSrc-specific `--no-convert` workaround to every CrossOver game. Version 0.6.1 restricts it to the `hl-cs16/SmartSteamLoader.exe` entry point, restoring Warcraft’s previously tested path conversion and keeping its saved `-window -opengl` arguments. Update the installed app in Applications, then restart the game to use the corrected command.
+
+After installing 0.6.1, a local launch of the same XTD map with temporary `-loadfile` arguments rendered terrain, scenery and the builder model. The temporary map arguments were not saved; normal launches retain only `-window -opengl`. Windows LAN joining was not repeated during this regression check.

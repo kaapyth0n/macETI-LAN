@@ -43,11 +43,13 @@ public enum GameLauncher {
             guard fm.isExecutableFile(atPath: wine.path) else { throw ETIError("The selected CrossOver installation is missing its Wine executable.") }
             let gameDirectory = workingDirectory ?? executable.deletingLastPathComponent()
             // --cx-app searches bottle application names; a Mac path must be positional.
-            // CrossOver still accepts Mac executable/workdir paths with --no-convert.
-            // Keep game arguments literal: its default conversion rewrites existing
-            // relative directories (e.g. -game cstrike) and breaks GoldSrc startup.
+            // GoldSrc requires a literal mod directory. Other games retain the
+            // tested CrossOver path conversion, including Warcraft's launcher.
+            let goldSrc = executable.lastPathComponent == "SmartSteamLoader.exe"
+                && executable.deletingLastPathComponent().lastPathComponent == "hl-cs16"
+            let conversion = goldSrc ? ["--no-convert"] : []
             return LaunchCommand(executable: wine,
-                                 arguments: ["--bottle", config.bottle, "--no-convert", "--workdir", gameDirectory.path, "--", executable.path] + config.arguments,
+                                 arguments: ["--bottle", config.bottle] + conversion + ["--workdir", gameDirectory.path, "--", executable.path] + config.arguments,
                                  workingDirectory: gameDirectory)
         case .native:
             if executable.pathExtension.lowercased() == "app" {

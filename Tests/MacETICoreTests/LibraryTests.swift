@@ -80,14 +80,27 @@ final class LibraryTests: XCTestCase {
         config.arguments = ["+connect", "192.0.2.1", "$(touch /tmp/never-run-this)"]
         let command = try GameLauncher.command(for: config, crossOver: app)
         XCTAssertEqual(command.executable, wine)
-        XCTAssertEqual(command.arguments, ["--bottle", "LAN Games", "--no-convert", "--workdir", exe.deletingLastPathComponent().path, "--", exe.path] + config.arguments)
+        XCTAssertEqual(command.arguments, ["--bottle", "LAN Games", "--workdir", exe.deletingLastPathComponent().path, "--", exe.path] + config.arguments)
         XCTAssertEqual(command.workingDirectory, exe.deletingLastPathComponent())
         let gameDirectory = temporary.appendingPathComponent("Game Data", isDirectory: true)
         try FileManager.default.createDirectory(at: gameDirectory, withIntermediateDirectories: true)
         config.workingDirectory = gameDirectory.path
         let customDirectoryCommand = try GameLauncher.command(for: config, crossOver: app)
-        XCTAssertEqual(customDirectoryCommand.arguments, ["--bottle", "LAN Games", "--no-convert", "--workdir", gameDirectory.path, "--", exe.path] + config.arguments)
+        XCTAssertEqual(customDirectoryCommand.arguments, ["--bottle", "LAN Games", "--workdir", gameDirectory.path, "--", exe.path] + config.arguments)
         XCTAssertEqual(customDirectoryCommand.workingDirectory, gameDirectory)
+        // Warcraft must retain its previously tested conversion and renderer flags.
+        config.arguments = ["-window", "-opengl"]
+        let warcraftCommand = try GameLauncher.command(for: config, crossOver: app)
+        XCTAssertFalse(warcraftCommand.arguments.contains("--no-convert"))
+        XCTAssertEqual(Array(warcraftCommand.arguments.suffix(2)), ["-window", "-opengl"])
+        let goldSrc = gameDirectory.appendingPathComponent("hl-cs16/SmartSteamLoader.exe")
+        try FileManager.default.createDirectory(at: goldSrc.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try Data("fixture".utf8).write(to: goldSrc)
+        config.executablePath = goldSrc.path
+        config.arguments = ["-game", "cstrike"]
+        let goldSrcCommand = try GameLauncher.command(for: config, crossOver: app)
+        XCTAssertTrue(goldSrcCommand.arguments.contains("--no-convert"))
+        XCTAssertEqual(Array(goldSrcCommand.arguments.suffix(2)), ["-game", "cstrike"])
         XCTAssertThrowsError(try GameLauncher.command(for: config, crossOver: nil))
         config.bottle = ""
         XCTAssertThrowsError(try GameLauncher.command(for: config, crossOver: app))
